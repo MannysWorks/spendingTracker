@@ -101,6 +101,12 @@ import java.util.Optional;
     }
     public void editTransaction(LocalDate date, SpendingTrackerDTO dto) {
         try {
+            Optional<spendingTracker> previousEntry = spendingTrackerRepo.findTopByOrderByDateDesc();
+
+            BigDecimal previousTotalAssets = previousEntry
+                    .map(spendingTracker::getTotalAssets)
+                    .orElse(BigDecimal.ZERO);
+
             spendingTracker existing = spendingTrackerRepo.findByDate(date)
                     .orElseThrow(() -> new RuntimeException("Transaction not found with date: " + date));
 
@@ -133,9 +139,11 @@ import java.util.Optional;
             );
 
             BigDecimal totalAssets = calculateTotalAssets(endOfDayBalance, nullSafe(existing.getRobinHood()));
+            BigDecimal percentChange = calculatePercentChange(totalAssets, previousTotalAssets);
 
             existing.setEndOfDayBalance(endOfDayBalance);
             existing.setTotalAssets(totalAssets);
+            existing.setPercentChange(percentChange);
 
             spendingTrackerRepo.save(existing);
 
@@ -315,7 +323,7 @@ import java.util.Optional;
     }
 
     private BigDecimal calculatePercentChange(BigDecimal current, BigDecimal previous) {
-        if (previous.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
+         if (previous.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
         return current.subtract(previous)
                 .divide(previous, 4, RoundingMode.HALF_UP)
                 .multiply(new BigDecimal("100"));

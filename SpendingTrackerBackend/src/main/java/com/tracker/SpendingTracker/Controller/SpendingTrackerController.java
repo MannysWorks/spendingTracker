@@ -19,7 +19,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping("api/v1/spendingTracker")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173")
 public class SpendingTrackerController {
     private final SpendingTrackerServices spendingTrackerServices;
     private final SpendingTrackerRepo spendingTrackerRepo;

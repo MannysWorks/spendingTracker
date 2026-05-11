@@ -5,7 +5,7 @@ interface props {
   entries: Entry[]
   onEditClick: () => void
   getFormDataEntry?: (entry: Entry) => void
-  onDeleteClick?: () => void
+  onDeleteClick?: (entry: Entry) => void
 }
 
 function Table({ titles, entries, onEditClick, onDeleteClick, getFormDataEntry }: props) {
@@ -32,7 +32,7 @@ function Table({ titles, entries, onEditClick, onDeleteClick, getFormDataEntry }
                     getFormDataEntry(entry);
                   }
                 }}>edit</button>
-                <button onClick={onDeleteClick}>delete</button>
+                <button onClick={() => onDeleteClick?.(entry)}>delete</button>
               </td>
             </tr>
           })}

@@ -2,30 +2,15 @@ import type { Entry } from "../interfaces/Entry";
 import GenericModal from "./GenericModal";
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { useState } from "react";
+import Toast from "./Toast";
+import { postEntry, putEntry, handleResponse } from "../Services/EntryService";
 
-const BASE_URL = 'http://localhost:8080/api/v1/spendingTracker'
 interface props {
     onClose: () => void
     entry?: Entry
 }
 
-async function handleResponse(response: Response, setShowToast: (show: boolean) => void, setToastMessage: (message: string) => void) {
-    if (response.ok) {
-        const message = await response.text();
-        console.log(message);
-        setShowToast(true);
-        setToastMessage(message);
-    }
-    else if (response.status === 409) {
-        const error = await response.text();
-        console.log(error);
-        setShowToast(true);
-        setToastMessage(error);
-    }
-    else {
-        console.log("Something Went Wrong! ", response.status)
-    }
-}
+
 function ModalForm({ onClose, entry }: props) {
     const { register, handleSubmit, formState: { errors } } = useForm<Entry>({
         defaultValues: entry
@@ -33,47 +18,16 @@ function ModalForm({ onClose, entry }: props) {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
 
-    function Toast({ message, onClose }: { message: string, onClose: () => void }) {
-        return (
-            <div className="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-                <div className="toast-header">
-                    <strong className="me-auto">Notification</strong>
-                    <button
-                        type="button"
-                        className="btn-close"
-                        onClick={onClose}
-                    />
-                </div>
-                <div className="toast-body">
-                    {message}
-                </div>
-            </div>
-        )
-    }
-    const postEntry = async (entry: Entry) => {
-        const response = await fetch(`${BASE_URL}/add`, {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(entry)
-        });
-
-        await handleResponse(response, setShowToast, setToastMessage);
-    }
-
-    const putEntry = async (entry: Entry) => {
-        const response = await fetch(`${BASE_URL}/edit/date/${entry.date}`, {
-            method: "PATCH",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(entry)
-        });
-        await handleResponse(response, setShowToast, setToastMessage);
-    }
 
     const onSubmit: SubmitHandler<Entry> = (data: Entry) => {
         if (entry) {
-            putEntry(data);
+            const response = putEntry(data);
+            handleResponse(response, setShowToast, setToastMessage);
         }
-        else postEntry(data);
+        else {
+            const response = postEntry(data);
+            handleResponse(response, setShowToast, setToastMessage);
+        }
         console.log(data);
     }
     return <>
