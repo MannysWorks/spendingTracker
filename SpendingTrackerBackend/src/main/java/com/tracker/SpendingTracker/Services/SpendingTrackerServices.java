@@ -101,8 +101,7 @@ import java.util.Optional;
     }
     public void editTransaction(LocalDate date, SpendingTrackerDTO dto) {
         try {
-            Optional<spendingTracker> previousEntry = spendingTrackerRepo.findTopByOrderByDateDesc();
-
+            Optional<spendingTracker> previousEntry = spendingTrackerRepo.findTopByDateBeforeOrderByDateDesc(date);
             BigDecimal previousTotalAssets = previousEntry
                     .map(spendingTracker::getTotalAssets)
                     .orElse(BigDecimal.ZERO);
@@ -140,6 +139,8 @@ import java.util.Optional;
 
             BigDecimal totalAssets = calculateTotalAssets(endOfDayBalance, nullSafe(existing.getRobinHood()));
             BigDecimal percentChange = calculatePercentChange(totalAssets, previousTotalAssets);
+            logger.info("total assets {}", totalAssets);
+            logger.info("prev Total assets {}", previousTotalAssets);
 
             existing.setEndOfDayBalance(endOfDayBalance);
             existing.setTotalAssets(totalAssets);
@@ -268,11 +269,24 @@ import java.util.Optional;
         }
     }
     private void addFirstTransaction(SpendingTrackerDTO dto) {
+        BigDecimal endOfDayBalance = calculateEndOfDayBalance(
+                nullSafe(dto.getStartOfDayBalance()),
+                nullSafe(dto.getIncome()),
+                nullSafe(dto.getColdCash()),
+                nullSafe(dto.getGrocery()),
+                nullSafe(dto.getFastFood()),
+                nullSafe(dto.getBills()),
+                nullSafe(dto.getSubscriptions()),
+                nullSafe(dto.getGas()),
+                nullSafe(dto.getShopping()),
+                nullSafe(dto.getMiscellaneous()),
+                nullSafe(dto.getRobinHoodTransfer())
+        );
         try {
             spendingTracker entity = new spendingTracker();
             entity.setDate(dto.getDate());
             entity.setIncome(nullSafe(dto.getIncome()));
-            entity.setStartOfDayBalance(dto.getStartOfDayBalance());
+            entity.setStartOfDayBalance(nullSafe(dto.getStartOfDayBalance()));
             entity.setColdCash(nullSafe(dto.getColdCash()));
             entity.setGrocery(nullSafe(dto.getGrocery()));
             entity.setFastFood(nullSafe(dto.getFastFood()));
@@ -283,9 +297,9 @@ import java.util.Optional;
             entity.setMiscellaneous(nullSafe(dto.getMiscellaneous()));
             entity.setRobinHoodTransfer(nullSafe(dto.getRobinHoodTransfer()));
             entity.setRobinHood(nullSafe(dto.getRobinHood()));
-            entity.setEndOfDayBalance(dto.getEndOfDayBalance());
-            entity.setTotalAssets(dto.getTotalAssets());
-            entity.setPercentChange(dto.getPercentChange());
+            entity.setEndOfDayBalance(endOfDayBalance);
+            entity.setTotalAssets(calculateTotalAssets(entity.getEndOfDayBalance(), entity.getRobinHood()));
+            entity.setPercentChange(nullSafe(dto.getPercentChange()));
 
             spendingTrackerRepo.save(entity);
         } catch (Exception e) {
@@ -323,7 +337,7 @@ import java.util.Optional;
     }
 
     private BigDecimal calculatePercentChange(BigDecimal current, BigDecimal previous) {
-         if (previous.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
+        if (previous.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
         return current.subtract(previous)
                 .divide(previous, 4, RoundingMode.HALF_UP)
                 .multiply(new BigDecimal("100"));

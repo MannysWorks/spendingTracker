@@ -14,4 +14,6 @@ public interface SpendingTrackerRepo extends JpaRepository<spendingTracker, Long
     Optional<spendingTracker> findByDate(LocalDate date);
     List<spendingTracker> findAllByDate(LocalDate date);
     List<spendingTracker> findByDateAfter(LocalDate date);
-    Optional<spendingTracker> findTopByDateBeforeOrderByDateDesc(LocalDate date);}
+    Optional<spendingTracker> findTopByDateBeforeOrderByDateDesc(LocalDate date);
+    
+}
