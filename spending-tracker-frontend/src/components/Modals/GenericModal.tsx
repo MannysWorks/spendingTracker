@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 
 interface GenericModalProps {
@@ -9,8 +10,15 @@ interface GenericModalProps {
 
 function GenericModal({ onClose, body, title, onSave }: GenericModalProps) {
     return (
-        <div className="modal fade show d-block" tabIndex={-1}>
-            <div className="modal-dialog modal-xl">
+        <motion.div
+            className="modal show d-block"
+            tabIndex={-1}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+        >
+            <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title">{title}</h5>
@@ -21,7 +29,7 @@ function GenericModal({ onClose, body, title, onSave }: GenericModalProps) {
                     </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }
 

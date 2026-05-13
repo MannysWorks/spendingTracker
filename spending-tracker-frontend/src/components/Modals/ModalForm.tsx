@@ -4,6 +4,7 @@ import { useForm, type SubmitHandler } from "react-hook-form"
 import { useState } from "react";
 import Toast from "../Toast";
 import { postEntry, putEntry, handleResponse } from "../../Services/EntryService";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface props {
     onClose: () => void
@@ -31,6 +32,7 @@ function ModalForm({ onClose, entry }: props) {
         console.log(data);
     }
     return <>
+
         <GenericModal
             title={entry ? "Edit Entry" : "Add New Entry"}
             onClose={onClose}
@@ -234,11 +236,21 @@ function ModalForm({ onClose, entry }: props) {
                 </>
             }
         />
-        {
-            <div className="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style={{ zIndex: 9999 }}>
-                {showToast && <Toast message={toastMessage} onClose={() => setShowToast(false)} />}
-            </div>
-        }
+        <AnimatePresence>
+            {showToast && (
+                <div className="toast-container position-fixed top-0 start-50 translate-middle-x p-3" data-bs-delay="5000" data-bs-animation="true" style={{ zIndex: 9999 }}>
+
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <Toast message={toastMessage} onClose={() => setShowToast(false)} />
+                    </motion.div>
+                </div>
+            )}
+        </AnimatePresence>
     </>
 }
 export default ModalForm;

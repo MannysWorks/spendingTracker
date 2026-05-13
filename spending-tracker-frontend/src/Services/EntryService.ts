@@ -10,12 +10,18 @@ export async function handleResponse(response: Promise<Response>, setShowToast: 
         console.log(message);
         setShowToast(true);
         setToastMessage(message);
+        setTimeout(() => {
+            setShowToast(false);
+        }, 3000);
     }
     else if (res.status === 409) {
         const error = await res.text();
         console.log(error);
         setShowToast(true);
         setToastMessage(error);
+        setTimeout(() => {
+            setShowToast(false);
+        }, 3000);
     }
     else {
         console.log("Something Went Wrong! ", res.status)

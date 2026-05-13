@@ -4,7 +4,9 @@ import Table from "../Table";
 import type { Entry } from "../../interfaces/Entry";
 import ModalForm from "./ModalForm";
 import { ToastWithBtn } from "../Toast";
-import { deleteEntry, handleResponse } from "../../Services/EntryService";
+import { AnimatePresence, motion } from "framer-motion";
+
+import { deleteEntry, getEntries, handleResponse } from "../../Services/EntryService";
 
 const BASE_URL = 'http://localhost:8080/api/v1/spendingTracker'
 
@@ -16,14 +18,15 @@ function Modal({ onClose }: { onClose: () => void }) {
     const [toastMessage, setToastMessage] = useState("");
 
     useEffect(() => {
-        const fetchEntries = async () => {
-            setIsLoading(true);
-            const response = await fetch(`${BASE_URL}/all`);
-            const entries = await response.json() as Entry[];
+        setIsLoading(true);
+        const response = async () => {
+            const res = await getEntries();
+            return res;
+        };
+        response().then((entries) => {
             setEntries(entries);
             setIsLoading(false);
-        }
-        fetchEntries();
+        });
     }, [])
 
     const titles = [
@@ -59,7 +62,12 @@ function Modal({ onClose }: { onClose: () => void }) {
     }
 
     return <>
-        <div className="modal fade show d-block" tabIndex={-1}>
+        <motion.div className="modal show d-block"
+            tabIndex={-1}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.90 }}
+            transition={{ duration: 0.2 }}>
             <div className="modal-dialog modal-fullscreen">
                 <div className="modal-content">
                     <div className="modal-header">
@@ -90,12 +98,23 @@ function Modal({ onClose }: { onClose: () => void }) {
                     />}
                     {showToastForDelete && (
                         <div className="toast-container position-fixed top-0 start-50 translate-middle-x p-3" style={{ zIndex: 9999 }}>
-                            <ToastWithBtn message={message} onClose={() => setShowToastForDelete(false)} onDeleteEntry={() => HandleDeleteEntry(preFilledFormData?.date || '')} />
+                            <AnimatePresence>
+                                <motion.div
+                                    drag="x"
+                                    dragConstraints={{ left: 0, right: 0 }}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <ToastWithBtn message={message} onClose={() => setShowToastForDelete(false)} />
+                                </motion.div>
+                            </AnimatePresence>
                         </div>
                     )}
                 </div>
             </div>
-        </div>
+        </motion.div>
     </>
 }
 export default Modal;

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../css/Navbar.css"
 import ModalForm from "./Modals/ModalForm";
+import { AnimatePresence, motion } from "framer-motion";
 
 function Navbar({ userName }: { userName: string }) {
     const [showModalForm, setShowModalForm] = useState(false);
@@ -35,7 +36,11 @@ function Navbar({ userName }: { userName: string }) {
                         />
                     </div>
                 </button>
-                {showModalForm && <ModalForm onClose={() => setShowModalForm(false)} />}
+                <AnimatePresence>
+                    {showModalForm && (
+                        <ModalForm key="modal-form" onClose={() => setShowModalForm(false)} />
+                    )}
+                </AnimatePresence>
             </div>
         </nav>
     )
