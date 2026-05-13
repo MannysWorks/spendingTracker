@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "../css/Navbar.css"
-import ModalForm from "./ModalForm";
+import ModalForm from "./Modals/ModalForm";
 
 function Navbar({ userName }: { userName: string }) {
     const [showModalForm, setShowModalForm] = useState(false);

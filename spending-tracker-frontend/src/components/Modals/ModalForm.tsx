@@ -1,9 +1,9 @@
-import type { Entry } from "../interfaces/Entry";
+import type { Entry } from "../../interfaces/Entry";
 import GenericModal from "./GenericModal";
 import { useForm, type SubmitHandler } from "react-hook-form"
 import { useState } from "react";
-import Toast from "./Toast";
-import { postEntry, putEntry, handleResponse } from "../Services/EntryService";
+import Toast from "../Toast";
+import { postEntry, putEntry, handleResponse } from "../../Services/EntryService";
 
 interface props {
     onClose: () => void

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import AssetSummary from "./AssetSummary";
-import Table from "./Table";
-import type { Entry } from "../interfaces/Entry";
+import AssetSummary from "../AssetSummary";
+import Table from "../Table";
+import type { Entry } from "../../interfaces/Entry";
 import ModalForm from "./ModalForm";
-import { ToastWithBtn } from "./Toast";
-import { deleteEntry, handleResponse } from "../Services/EntryService";
+import { ToastWithBtn } from "../Toast";
+import { deleteEntry, handleResponse } from "../../Services/EntryService";
 
 const BASE_URL = 'http://localhost:8080/api/v1/spendingTracker'
 
