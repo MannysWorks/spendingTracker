@@ -3,7 +3,7 @@ import { type Entry } from "../interfaces/Entry";
 // services/entryService.ts
 const BASE_URL = 'http://localhost:8080/api/v1/spendingTracker'
 
-export async function handleResponse(response: Promise<Response>, setShowToast: (show: boolean) => void, setToastMessage: (message: string) => void) {
+export async function handleResponse(response: Response, setShowToast: (show: boolean) => void, setToastMessage: (message: string) => void) {
     const res = await response;
     if (res.ok) {
         const message = await res.text();

@@ -3,31 +3,19 @@ import AssetSummary from "../AssetSummary";
 import Table from "../Table";
 import type { Entry } from "../../interfaces/Entry";
 import ModalForm from "./ModalForm";
-import { ToastWithBtn } from "../Toast";
+import Toast, { ToastWithBtn } from "../Toast";
 import { AnimatePresence, motion } from "framer-motion";
+import Pagination from "../Pagination";
 
 import { deleteEntry, getEntries, handleResponse } from "../../Services/EntryService";
 
-const BASE_URL = 'http://localhost:8080/api/v1/spendingTracker'
 
-function Modal({ onClose }: { onClose: () => void }) {
+function Modal({ onClose, onRefresh }: { onClose: () => void; onRefresh: () => void; }) {
     const [entries, setEntries] = useState<Entry[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [preFilledFormData, setPreFilledFormData] = useState<Entry>();
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
-
-    useEffect(() => {
-        setIsLoading(true);
-        const response = async () => {
-            const res = await getEntries();
-            return res;
-        };
-        response().then((entries) => {
-            setEntries(entries);
-            setIsLoading(false);
-        });
-    }, [])
 
     const titles = [
         "Date",
@@ -54,12 +42,30 @@ function Modal({ onClose }: { onClose: () => void }) {
     }
     const [showModalFormForEdit, setShowModalFormForEdit] = useState(false);
     const [showToastForDelete, setShowToastForDelete] = useState(false);
+
+
     const message = "Are you sure you want to delete this entry? This action cannot be undone."
+
     const HandleDeleteEntry = async (date: string) => {
-        const response = deleteEntry(date);
-        handleResponse(response, setShowToast, setToastMessage);
+        const response = await deleteEntry(date);
         setShowToastForDelete(false);
+        handleResponse(response, setShowToast, setToastMessage);
+        onRefresh();
     }
+    const [deletedEntryDate, setDeletedEntryDate] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const entriesPerPage = 5;
+    const indexOfLastEntry = currentPage * entriesPerPage;
+    const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
+    const currentEntries = entries.slice(indexOfFirstEntry, indexOfLastEntry);
+
+    useEffect(() => {
+        setIsLoading(true);
+        getEntries().then((entries) => {
+            setEntries(entries);
+            setIsLoading(false);
+        });
+    }, []);
 
     return <>
         <motion.div className="modal show d-block"
@@ -84,16 +90,25 @@ function Modal({ onClose }: { onClose: () => void }) {
 
                         <Table
                             titles={titles}
-                            entries={entries}
+                            entries={currentEntries}
+                            isLoading={false}
                             getFormDataEntry={handlePreFilledFormData}
                             onEditClick={() => setShowModalFormForEdit(true)}
-                            onDeleteClick={(entry: Entry) => {
-                                setPreFilledFormData(entry);
+                            onDeleteClick={(entryDate: string) => {
+                                setDeletedEntryDate(entryDate);
                                 setShowToastForDelete(true);
                             }} />
+                        <Pagination
+                            entriesPerPage={entriesPerPage}
+                            totalEntries={entries.length}
+                            setCurrentPage={setCurrentPage}
+                            currentPage={currentPage} />
                     </div>
                     {showModalFormForEdit && <ModalForm
-                        onClose={() => setShowModalFormForEdit(false)}
+                        onClose={() => {
+                            setShowModalFormForEdit(false)
+                            onRefresh();
+                        }}
                         entry={preFilledFormData}
                     />}
                     {showToastForDelete && (
@@ -107,11 +122,29 @@ function Modal({ onClose }: { onClose: () => void }) {
                                     exit={{ opacity: 0, y: -20 }}
                                     transition={{ duration: 0.3 }}
                                 >
-                                    <ToastWithBtn message={message} onClose={() => setShowToastForDelete(false)} />
+                                    <ToastWithBtn message={message}
+                                        onClose={() => setShowToastForDelete(false)}
+                                        onDeleteEntry={() => HandleDeleteEntry(deletedEntryDate)}
+                                    />
                                 </motion.div>
                             </AnimatePresence>
                         </div>
                     )}
+                    <AnimatePresence>
+                        {showToast && (
+                            <div className="toast-container position-fixed top-0 start-50 translate-middle-x p-3" data-bs-delay="5000" data-bs-animation="true" style={{ zIndex: 9999 }}>
+
+                                <motion.div
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -20 }}
+                                    transition={{ duration: 0.3 }}
+                                >
+                                    <Toast message={toastMessage} onClose={() => setShowToast(false)} />
+                                </motion.div>
+                            </div>
+                        )}
+                    </AnimatePresence>
                 </div>
             </div>
         </motion.div>

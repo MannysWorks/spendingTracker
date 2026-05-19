@@ -12,7 +12,7 @@ function Navbar({ userName }: { userName: string }) {
             {/* Left side */}
             <a className="navbar-brand navbar-title m-0" href="#">
                 <span className="me-2">
-                    <NavbarIcon size={30} color="#1a6e1a" />
+                    <NavbarIcon size={40} color="#1a6e1a" />
                 </span>
                 {userName}'s Spending Tracker
             </a>
@@ -23,7 +23,7 @@ function Navbar({ userName }: { userName: string }) {
                     whileHover={{ scale: 1.5 }}
                     whileTap={{ scale: 0.95 }}
                     className="add-entry" onClick={() => setShowModalForm(true)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="Vectors-Pen-Add-1--Streamline-Freehand" height="24" width="24">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" id="Vectors-Pen-Add-1--Streamline-Freehand" height="30" width="30">
                         <desc>
                             Vectors Pen Add 1 Streamline Icon: https://streamlinehq.com
                         </desc>

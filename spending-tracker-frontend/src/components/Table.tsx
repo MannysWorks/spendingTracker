@@ -1,3 +1,4 @@
+import type { JSX } from "react"
 import type { Entry } from "../interfaces/Entry"
 
 interface props {
@@ -5,11 +6,22 @@ interface props {
   entries: Entry[]
   onEditClick: () => void
   getFormDataEntry?: (entry: Entry) => void
-  onDeleteClick?: (entry: Entry) => void
+  onDeleteClick?: (entryDate: string) => void
+  isLoading?: boolean
 }
 
-function Table({ titles, entries, onEditClick, onDeleteClick, getFormDataEntry }: props) {
-  return <>
+
+function Table({ titles, entries, onEditClick, onDeleteClick, getFormDataEntry, isLoading }: props) {
+
+  const RenderPlaceHolder: () => JSX.Element = () => {
+    return <div className="text-center">
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  }
+
+  return isLoading ? RenderPlaceHolder() : <>
     <div className="table-responsive m-3 rounded">
       <table className="table table-dark table-striped table-hover">
         <thead>
@@ -32,7 +44,7 @@ function Table({ titles, entries, onEditClick, onDeleteClick, getFormDataEntry }
                     getFormDataEntry(entry);
                   }
                 }}>edit</button>
-                <button onClick={() => onDeleteClick?.(entry)}>delete</button>
+                <button onClick={() => onDeleteClick?.(entry.date)}>delete</button>
               </td>
             </tr>
           })}
@@ -40,7 +52,6 @@ function Table({ titles, entries, onEditClick, onDeleteClick, getFormDataEntry }
       </table>
     </div>
   </>
-
 }
 
 export default Table;
