@@ -20,13 +20,13 @@ function ModalForm({ onClose, entry }: props) {
     const [toastMessage, setToastMessage] = useState("");
 
 
-    const onSubmit: SubmitHandler<Entry> = (data: Entry) => {
+    const onSubmit: SubmitHandler<Entry> = async (data: Entry) => {
         if (entry) {
-            const response = putEntry(data);
+            const response = await putEntry(data);
             handleResponse(response, setShowToast, setToastMessage);
         }
         else {
-            const response = postEntry(data);
+            const response = await postEntry(data);
             handleResponse(response, setShowToast, setToastMessage);
         }
         console.log(data);
