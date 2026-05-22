@@ -5,11 +5,19 @@ import 'bootstrap/dist/js/bootstrap.js'
 import 'bootstrap/dist/css/bootstrap.css'
 import { CursorTrail } from "./components/Cursor.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Login } from "./Login.tsx";
-import { NotFoundPage } from "./NotfoundPage.tsx";
+import { Login } from "./pages/Login.tsx";
+import { NotFoundPage } from "./pages/NotfoundPage.tsx";
+import { AuthProvider } from "./Services/AuthProvider.tsx";
+import { ProtectedRoute } from "./Services/ProtectedRoute.tsx";
 
 const router = createBrowserRouter([
-  { path: "/", element: <App /> },
+  {
+    path: "/",
+    element: <ProtectedRoute />,
+    children: [
+      { path: "/", element: <App /> }
+    ]
+  },
   { path: "/login", element: <Login /> },
   { path: "*", element: <NotFoundPage /> }
 ]);
@@ -17,6 +25,8 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <CursorTrail />
-    <RouterProvider router={router} />
+    <AuthProvider isSighnedIn={true}>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );
