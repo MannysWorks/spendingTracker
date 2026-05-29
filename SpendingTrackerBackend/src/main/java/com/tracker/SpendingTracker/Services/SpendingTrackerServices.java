@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor public class SpendingTrackerServices {
+@RequiredArgsConstructor
+public class SpendingTrackerServices {
     private final SpendingTrackerRepo spendingTrackerRepo;
     private static final Logger logger = LoggerFactory.getLogger(SpendingTrackerServices.class);
 

@@ -1,5 +1,4 @@
-# Application properties with secrets
-application.properties
+.env
 
 # OS files
 .DS_Store

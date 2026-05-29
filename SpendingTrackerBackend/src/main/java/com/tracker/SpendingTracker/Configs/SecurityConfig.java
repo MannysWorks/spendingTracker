@@ -23,10 +23,10 @@ public class SecurityConfig {
                     config.setAllowedHeaders(List.of("*"));
                     return config;
                 }))
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
+                // .csrf(csrf -> csrf.disable())
+               /* .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll()
-                );
+                ) */ ;
 
         return http.build();
     }
