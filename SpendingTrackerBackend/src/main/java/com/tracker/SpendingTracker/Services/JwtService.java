@@ -2,7 +2,6 @@ package com.tracker.SpendingTracker.Services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,14 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class jwtService {
+public class JwtService {
     @Value("${security.jwt.secret-key")
     private String secretKey;
 
@@ -28,9 +26,17 @@ public class jwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver ) {
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(getSignInKey())       // replaces setSigningKey()
+                .build()
+                .parseSignedClaims(token)    // replaces parseClaimsJws()
+                .getPayload();               // replaces getBody()
     }
 
     public String generateToken(UserDetails userDetails) {
@@ -51,11 +57,11 @@ public class jwtService {
             long jwtExpiration)
     {
         return Jwts.builder()
-                .setClaims(extractClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + getExpiration()))
-                .signWith(getSignInKey(), SignatureAlgorithm.ES256)
+                .claims(extractClaims)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + getExpiration()))
+                .signWith(getSignInKey())
                 .compact();
     }
 
@@ -72,15 +78,7 @@ public class jwtService {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getSignInKey())       // replaces setSigningKey()
-                .build()
-                .parseSignedClaims(token)    // replaces parseClaimsJws()
-                .getPayload();               // replaces getBody()
-    }
-
-    private SecretKey getSignInKey() {
+       private SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }

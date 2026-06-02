@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react"
+import { type ReactNode } from "react"
 import Card from "./Card"
 interface props {
     totalAssets: number

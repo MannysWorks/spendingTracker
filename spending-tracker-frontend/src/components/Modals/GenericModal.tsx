@@ -8,7 +8,7 @@ interface GenericModalProps {
     onSave?: () => void;
 }
 
-function GenericModal({ onClose, body, title, onSave }: GenericModalProps) {
+function GenericModal({ onClose, body, title }: GenericModalProps) {
     return (
         <motion.div
             className="modal show d-block"
