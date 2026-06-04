@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
+import '../../css/GenericModal.css'
 
 interface GenericModalProps {
     onClose: () => void;

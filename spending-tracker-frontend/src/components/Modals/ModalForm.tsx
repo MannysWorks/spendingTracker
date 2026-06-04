@@ -5,6 +5,7 @@ import { useState } from "react";
 import Toast from "../Toast";
 import { postEntry, putEntry, handleResponse } from "../../Services/EntryService";
 import { AnimatePresence, motion } from "framer-motion";
+import '../../css/ModalForm.css'
 
 interface props {
     onClose: () => void
@@ -79,16 +80,16 @@ function ModalForm({ onClose, entry }: props) {
                                 </div>
                             </div>
                             <div className="d-flex col-12">
-                                <button onClick={() => setIndex(Math.max(0, index - 1))} className="btn btn-primary w-100 py-3 rounded-pill">
+                                <button onClick={() => setIndex(Math.max(0, index - 1))} className="btn btn-outline-primary w-50 h-60 rounded-pill me-2">
                                     previous
                                 </button>
-                                <button onClick={() => setIndex(Math.min(formFields.length - 1, index + 1))} className="btn btn-primary w-100 py-3 rounded-pill">
+                                <button onClick={() => setIndex(Math.min(formFields.length - 1, index + 1))} className="btn btn-outline-primary w-50 h-60 rounded-pill">
                                     next
                                 </button>
                             </div>
                             {index == formFields.length - 1 && (
                                 <div className="col-12">
-                                    <button type="submit" className="btn btn-primary w-100 py-3 rounded-pill">
+                                    <button type="submit" className="btn btn-success w-100 py-3 rounded-pill">
                                         Add Entry
                                     </button>
                                 </div>
