@@ -3,6 +3,7 @@ import { useState } from "react";
 import GenericModal from "../components/Modals/GenericModal";
 
 type LoginInputs = {
+    username: string;
     email: string;
     password: string;
 };
@@ -32,18 +33,14 @@ export const Login = () => {
 
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="field">
-                                <label htmlFor="email">Email</label>
+                                <label htmlFor="email/username">Username or Email</label>
                                 <input
-                                    id="email"
-                                    type="email"
-                                    placeholder="you@example.com"
+                                    id="email/username"
+                                    type="text"
+                                    placeholder="Email or Username"
                                     autoComplete="email"
                                     {...register("email", {
-                                        required: "Email is required.",
-                                        pattern: {
-                                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                            message: "Please enter a valid email address.",
-                                        },
+                                        required: "Email is required."
                                     })}
                                 />
                                 {errors.email && <span className="error">{errors.email.message}</span>}
