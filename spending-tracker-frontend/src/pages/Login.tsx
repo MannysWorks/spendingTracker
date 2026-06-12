@@ -1,75 +1,81 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useState } from "react";
 import GenericModal from "../components/Modals/GenericModal";
-
-type LoginInputs = {
-    username: string;
-    email: string;
-    password: string;
-};
+import { type LoginUserDto } from "../interfaces/LoginUserDto";
+import { type LoginResponse } from "../interfaces/LoginResponse";
+import { loginUser } from "../Services/AuthenticateUserService";
 
 export const Login = () => {
+    //Form login configuration
     const {
         register,
         handleSubmit,
         formState: { errors, isSubmitting },
-    } = useForm<LoginInputs>();
+    } = useForm<LoginUserDto>();
     const [showModalForm, setShowModalForm] = useState(true);
 
-    const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
-        // TODO: call your auth API here
-        console.log(data);
+    // Handle form submission
+    const onSubmit: SubmitHandler<LoginUserDto> = async (data) => {
+        if (data) {
+            const response = await loginUser(data);
+            if (response.ok) {
+                const loginResponse: LoginResponse = await response.json();
+                console.log(loginResponse);
+                localStorage.setItem("token", loginResponse.token);
+            }
+            console.log(data);
+        }
     };
 
     return (
-        showModalForm && (
-            <GenericModal
-                onClose={() => setShowModalForm(false)}
-                title={"Login"}
-                body={
-                    <div className="login-container">
-                        <h2>Welcome back</h2>
-                        <p>Sign in to your account</p>
-
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className="field">
-                                <label htmlFor="email/username">Username or Email</label>
-                                <input
-                                    id="email/username"
-                                    type="text"
-                                    placeholder="Email or Username"
-                                    autoComplete="email"
-                                    {...register("email", {
-                                        required: "Email is required."
-                                    })}
-                                />
-                                {errors.email && <span className="error">{errors.email.message}</span>}
-                            </div>
-
-                            <div className="field">
-                                <label htmlFor="password">Password</label>
-                                <input
-                                    id="password"
-                                    type="password"
-                                    placeholder="••••••••"
-                                    autoComplete="current-password"
-                                    {...register("password", {
-                                        required: "Password is required.",
-                                        minLength: {
-                                            value: 8,
-                                            message: "Password must be at least 8 characters.",
-                                        },
-                                    })}
-                                />
-                                {errors.password && <span className="error">{errors.password.message}</span>}
-                            </div>
-
-                            <button type="submit" disabled={isSubmitting}>
-                                {isSubmitting ? "Signing in..." : "Sign in"}
-                            </button>
-                        </form>
-                    </div>
-                }
-            />
-        ));
+        <>
+            {showModalForm && (
+                <GenericModal
+                    onClose={() => setShowModalForm(false)}
+                    title={"Login"}
+                    body={
+                        <div className="login-container">
+                            <h2>Welcome back</h2>
+                            <p>Sign in to your account</p>
+                            <form onSubmit={handleSubmit(onSubmit)}>
+                                <div className="field">
+                                    <label htmlFor="email">Email</label>
+                                    <input
+                                        id="email"
+                                        type="email"
+                                        placeholder="Email address"
+                                        autoComplete="email"
+                                        {...register("Email", {
+                                            required: "Email is required."
+                                        })}
+                                    />
+                                    {errors.Email && <span className="error">{errors.Email.message}</span>}
+                                </div>
+                                <div className="field">
+                                    <label htmlFor="password">Password</label>
+                                    <input
+                                        id="password"
+                                        type="password"
+                                        placeholder="••••••••"
+                                        autoComplete="current-password"
+                                        {...register("Password", {
+                                            required: "Password is required.",
+                                            minLength: {
+                                                value: 8,
+                                                message: "Password must be at least 8 characters.",
+                                            },
+                                        })}
+                                    />
+                                    {errors.Password && <span className="error">{errors.Password.message}</span>}
+                                </div>
+                                <button type="submit" disabled={isSubmitting}>
+                                    {isSubmitting ? "Signing in..." : "Sign in"}
+                                </button>
+                            </form>
+                        </div>
+                    }
+                />
+            )}
+        </>
+    )
 };

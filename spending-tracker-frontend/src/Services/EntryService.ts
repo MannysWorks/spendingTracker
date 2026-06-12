@@ -1,5 +1,6 @@
 import { type Entry } from "../interfaces/Entry";
 
+
 // services/entryService.ts
 const BASE_URL = 'http://localhost:8080/api/v1/spendingTracker'
 
@@ -29,30 +30,54 @@ export async function handleResponse(response: Response, setShowToast: (show: bo
 }
 
 
+
 export const getEntries = async (): Promise<Entry[]> => {
-    const response = await fetch(`${BASE_URL}/all`);
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${BASE_URL}/all`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+     if (!response.ok) {
+        console.log("Status:", response.status)
+        
+    }
     return response.json();
 }
 
 export const postEntry = async (entry: Entry): Promise<Response> => {
-        const response = await fetch(`${BASE_URL}/add`, {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${BASE_URL}/add`, {
+        method: "POST",
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+            },
             body: JSON.stringify(entry)
         }); 
         return response;
 }
 
 export const putEntry = async (entry: Entry): Promise<Response> => {
+    const token = localStorage.getItem("token");
     const response = await fetch(`${BASE_URL}/edit/date/${entry.date}`, {
         method: "PATCH",
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(entry)
     });
     return response;
 }
 
 export const deleteEntry = async (date: string): Promise<Response> => {
-    const response = await fetch(`${BASE_URL}/delete/${date}`, { method: "DELETE" });
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${BASE_URL}/delete/${date}`, {
+        method: "DELETE",
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
     return response;
 }

@@ -16,70 +16,68 @@ import java.util.function.Function;
 
 @Service
 public class JwtService {
-    @Value("${security.jwt.secret-key")
-    private String secretKey;
+  @Value("${security.jwt.secret-key}")
+  private String secretKey;
 
-    @Value("${security.jwt.expiration-time}")
-    private long jwtExpiration;
+  @Value("${security.jwt.expiration-time}")
+  private long jwtExpiration;
 
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
-    }
+  public String extractUsername(String token) {
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
+    return extractClaim(token, Claims::getSubject);
+  }
 
-    private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getSignInKey())       // replaces setSigningKey()
-                .build()
-                .parseSignedClaims(token)    // replaces parseClaimsJws()
-                .getPayload();               // replaces getBody()
-    }
+  public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    final Claims claims = extractAllClaims(token);
+    return claimsResolver.apply(claims);
+  }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
-    }
+  private Claims extractAllClaims(String token) {
+    return Jwts.parser()
+        .verifyWith(getSignInKey()) // replaces setSigningKey()
+        .build()
+        .parseSignedClaims(token) // replaces parseClaimsJws()
+        .getPayload(); // replaces getBody()
+  }
 
-    public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails) {
-        return buildToken(extractClaims, userDetails, jwtExpiration);
-    }
+  public String generateToken(UserDetails userDetails) {
+    return generateToken(new HashMap<>(), userDetails);
+  }
 
-    public long getExpiration() {
-       return jwtExpiration;
-    }
+  public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails) {
+    return buildToken(extractClaims, userDetails, jwtExpiration);
+  }
 
-    private String buildToken(
-            Map<String, Object> extractClaims,
-            UserDetails userDetails,
-            long jwtExpiration)
-    {
-        return Jwts.builder()
-                .claims(extractClaims)
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + getExpiration()))
-                .signWith(getSignInKey())
-                .compact();
-    }
+  public long getExpiration() {
+    return jwtExpiration;
+  }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-    }
+  private String buildToken(
+      Map<String, Object> extractClaims, UserDetails userDetails, long jwtExpiration) {
+    return Jwts.builder()
+        .claims(extractClaims)
+        .subject(userDetails.getUsername())
+        .issuedAt(new Date(System.currentTimeMillis()))
+        .expiration(new Date(System.currentTimeMillis() + getExpiration()))
+        .signWith(getSignInKey())
+        .compact();
+  }
 
-    private boolean isTokenExpired(String token) {
-       return extractExpiration(token).before(new Date());
-    }
+  public boolean isTokenValid(String token, UserDetails userDetails) {
+    final String username = extractUsername(token);
+    return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+  }
 
-    private Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
-    }
+  private boolean isTokenExpired(String token) {
+    return extractExpiration(token).before(new Date());
+  }
 
-       private SecretKey getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
-    }
+  private Date extractExpiration(String token) {
+    return extractClaim(token, Claims::getExpiration);
+  }
+
+  private SecretKey getSignInKey() {
+    byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+    return Keys.hmacShaKeyFor(keyBytes);
+  }
 }

@@ -30,7 +30,7 @@ public class AuthenticationService {
   public User signUp(RegisterUserDto input) {
     User user =
         new User(
-            input.getEmail(), input.getUserName(), passwordEncoder.encode(input.getPassword()));
+            input.getUserName(), input.getEmail(), passwordEncoder.encode(input.getPassword()));
     return userRepo.save(user);
   }
 
@@ -41,7 +41,7 @@ public class AuthenticationService {
             .orElseThrow(() -> new RuntimeException("User not found!"));
 
     authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(input.getEmail(), input.getPassword()));
+        new UsernamePasswordAuthenticationToken(user.getUsername(), input.getPassword()));
     return user;
   }
 }

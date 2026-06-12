@@ -38,10 +38,15 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) {
-    http.csrf(csrf -> csrf.disable())
+    http.cors(cors -> corsConfigurationSource())
+        .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(
             authorize ->
-                authorize.requestMatchers("/auth/**").permitAll().anyRequest().authenticated())
+                authorize
+                    .requestMatchers("/api/v1/spendingTracker/auth/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated())
         // This makes and treats every request like a new one regardless of the source
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -24,7 +24,7 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-  private HandlerExceptionResolver handlerExceptionResolver;
+  private final HandlerExceptionResolver handlerExceptionResolver;
 
   private final UserDetailsService userDetailsService;
   private final JwtService jwtService;
@@ -39,6 +39,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     // Get the header from the request
     final String authHeader = request.getHeader("Authorization");
+
+    System.out.println("=== JWT FILTER HIT ===");
+    System.out.println("Path: " + request.getRequestURI());
+    System.out.println("Auth header: " + authHeader);
 
     // If this filter can not be applied to the request then
     // call the rest of the filter chain
@@ -69,11 +73,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
           // After verifying the user add the authentication token to the security context holder
           SecurityContextHolder.getContext().setAuthentication(authToken);
-
-          // Call the rest of the filter
-          filterChain.doFilter(request, response);
         }
       }
+      // Call the rest of the filter
+      filterChain.doFilter(request, response);
     } catch (Exception e) {
       handlerExceptionResolver.resolveException(request, response, null, e);
     }

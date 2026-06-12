@@ -9,6 +9,7 @@ import { Login } from "./pages/Login.tsx";
 import { NotFoundPage } from "./pages/NotfoundPage.tsx";
 import { AuthProvider } from "./Services/AuthProvider.tsx";
 import { ProtectedRoute } from "./Services/ProtectedRoute.tsx";
+import { Register } from "./pages/Register.tsx";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
       { path: "/", element: <App /> }
     ]
   },
+  { path: "/register", element: <Register /> },
   { path: "/login", element: <Login /> },
   { path: "*", element: <NotFoundPage /> }
 ]);
