@@ -21,7 +21,7 @@ function Navbar({ userName }: { userName: string }) {
             <div className="ms-2">
                 {/* Button to trigger the modal for adding entries */}
                 <motion.button
-                    whileHover={{ scale: 1.5 }}
+                    whileHover={{ scale: 1.5, rotate: 10 }}
                     whileTap={{ scale: 0.95 }}
                     className="add-entry" onClick={() => setShowModalForm(true)}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 34 34" id="Add-1--Streamline-Core" height="30" width="30">

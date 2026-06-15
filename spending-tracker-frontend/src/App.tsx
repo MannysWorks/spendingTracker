@@ -21,7 +21,7 @@ function App() {
           <Navbar userName="Manny" />
           {/* This button in the navbar triggers the modal for viewing the table. */}
           <motion.button
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.05, rotate: 10 }}
             whileTap={{ scale: 0.95 }}
             className="btn rounded-15 mt-3 border-0"
             id="view-table-btn" onClick={() => setShowModal(true)}>
