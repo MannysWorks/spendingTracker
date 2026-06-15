@@ -11,23 +11,33 @@ import { AuthProvider } from "./Services/AuthProvider.tsx";
 import { ProtectedRoute } from "./Services/ProtectedRoute.tsx";
 import { Register } from "./pages/Register.tsx";
 
+
+const handleRegisterClick = () => {
+  // Navigate to the register page
+  window.location.href = "/register";
+};
+const handleLoginClick = () => {
+  // Navigate to the login page
+  window.location.href = "/login";
+}
 const router = createBrowserRouter([
   {
     path: "/",
     element: <ProtectedRoute />,
     children: [
       { path: "/", element: <App /> }
-    ]
+    ],
+    errorElement: <Login onRegisterClick={handleRegisterClick} />
   },
-  { path: "/register", element: <Register /> },
-  { path: "/login", element: <Login /> },
+  { path: "/register", element: <Register onLoginClick={handleLoginClick} /> },
+  { path: "/login", element: <Login onRegisterClick={handleRegisterClick} /> },
   { path: "*", element: <NotFoundPage /> }
 ]);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <CursorTrail />
-    <AuthProvider isSighnedIn={true}>
+    <AuthProvider isSighnedIn={false}>
       <RouterProvider router={router} />
     </AuthProvider>
   </StrictMode>

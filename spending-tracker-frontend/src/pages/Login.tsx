@@ -5,7 +5,7 @@ import { type LoginUserDto } from "../interfaces/LoginUserDto";
 import { type LoginResponse } from "../interfaces/LoginResponse";
 import { loginUser } from "../Services/AuthenticateUserService";
 
-export const Login = () => {
+export const Login = ({ onRegisterClick }: { onRegisterClick: () => void }) => {
     //Form login configuration
     const {
         register,
@@ -71,6 +71,12 @@ export const Login = () => {
                                 <button type="submit" disabled={isSubmitting}>
                                     {isSubmitting ? "Signing in..." : "Sign in"}
                                 </button>
+                                <p className="register-prompt d-flex align-items-center">
+                                    Don't have an account?
+                                    <button type="button" className="link-btn" onClick={onRegisterClick}>
+                                        Register
+                                    </button>
+                                </p>
                             </form>
                         </div>
                     }

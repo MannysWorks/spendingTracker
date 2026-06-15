@@ -4,7 +4,7 @@ import { useState } from "react";
 import GenericModal from "../components/Modals/GenericModal";
 import { registerUser } from "../Services/AuthenticateUserService";
 
-export const Register = () => {
+export const Register = ({ onLoginClick }: { onLoginClick: () => void }) => {
     //Form register configuration
     const {
         register,
@@ -87,6 +87,12 @@ export const Register = () => {
                             <button type="submit" disabled={isSubmitting}>
                                 {isSubmitting ? "Creating account..." : "Sign up"}
                             </button>
+                            <p className="register-prompt d-flex align-items-center">
+                                Already have an account?
+                                <button type="button" className="link-btn" onClick={onLoginClick}>
+                                    Log in
+                                </button>
+                            </p>
                         </form>
                     </div>
                 }
