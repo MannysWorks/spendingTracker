@@ -9,7 +9,12 @@
     justify-content: center;
     align-items: center;
 }
-
+.logo-wrapper {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 100;
+}
 .navbar-wrapper {
     display: flex;
     flex-direction: column;

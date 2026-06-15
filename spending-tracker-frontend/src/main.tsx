@@ -37,7 +37,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <CursorTrail />
-    <AuthProvider isSighnedIn={false}>
+    <AuthProvider isSighnedIn={true}>
       <RouterProvider router={router} />
     </AuthProvider>
   </StrictMode>

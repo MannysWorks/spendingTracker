@@ -3,17 +3,23 @@ import Modal from "./components/Modals/Modal";
 import { useState } from "react";
 import './css/App.css'
 import { AnimatePresence, motion } from "framer-motion";
-import { ExpandIcon } from "./assets/icons/Icons";
+import { ExpandIcon, NavbarIcon } from "./assets/icons/Icons";
 
-//
+// Main app component that renders the navbar and the modal for the table view. 
 function App() {
   const [showModal, setShowModal] = useState(false);
+  // This state is used to trigger a refresh of the table view when a new entry is added.
+  //  The modal will call the onRefresh function passed as a prop, which will update the refreshKey state and cause the Modal component to re-render with the new data.
   const [refreshKey, setRefreshKey] = useState(0);
   return (
     <>
+      <div className="logo-wrapper">
+        <NavbarIcon size={40} color="#1a6e1a" />
+      </div>
       <div className="bg">
         <div className="navbar-wrapper">
           <Navbar userName="Manny" />
+          {/* This button in the navbar triggers the modal for viewing the table. */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -22,12 +28,14 @@ function App() {
             <ExpandIcon size={40} color="#1a6e1a" />
           </motion.button>
           <AnimatePresence>
+            {/* The modal for viewing the table */}
             {showModal && (
               <Modal key={refreshKey} onClose={() => setShowModal(false)} onRefresh={() => setRefreshKey(prev => prev + 1)} />
             )}
           </AnimatePresence>
         </div>
       </div >
+
     </>
   )
 }

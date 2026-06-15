@@ -28,6 +28,7 @@ export const Register = ({ onLoginClick }: { onLoginClick: () => void }) => {
     };
 
     return (
+        //TODO: Refactor this to a separate component and reuse the modal for both login and register forms
         showModalForm && (
             <GenericModal
                 onClose={() => setShowModalForm(false)}

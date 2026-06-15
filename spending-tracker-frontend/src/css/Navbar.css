@@ -23,10 +23,21 @@
     left: 0;
 }
 
-
+.navbar-title-display-small-screens {
+    display: none;
+    font-family: playfair display, serif !important;
+    font-size: 20px !important;
+    color: green !important;
+}
 
 @media(max-width: 550px) {
     .navbar-title{
         display: none;
+    }
+    .navbar-title-display-small-screens {
+        display: block;
+        font-family: playfair display, serif !important;
+        font-size: 20px !important;
+        color: green !important;
     }
 }
