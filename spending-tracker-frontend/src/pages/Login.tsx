@@ -11,7 +11,6 @@ interface LoginProps {
 }
 
 
-
 export const Login = ({ onRegisterClick }: LoginProps) => {
     //Form login configuration
     const {
