@@ -11,7 +11,7 @@ import { AuthProvider } from "./Services/AuthProvider.tsx";
 import { ProtectedRoute } from "./Services/ProtectedRoute.tsx";
 import { Register } from "./pages/Register.tsx";
 
-
+// Handle navigation to login and register pages
 const handleRegisterClick = () => {
   // Navigate to the register page
   window.location.href = "/register";
@@ -20,6 +20,9 @@ const handleLoginClick = () => {
   // Navigate to the login page
   window.location.href = "/login";
 }
+// Check if the user is authenticated by looking for a token in localStorage
+const isAuthenticated = !!localStorage.getItem("token");
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -37,7 +40,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <CursorTrail />
-    <AuthProvider isSighnedIn={true}>
+    <AuthProvider isSighnedIn={isAuthenticated}>
       <RouterProvider router={router} />
     </AuthProvider>
   </StrictMode>

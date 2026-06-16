@@ -4,8 +4,15 @@ import GenericModal from "../components/Modals/GenericModal";
 import { type LoginUserDto } from "../interfaces/LoginUserDto";
 import { type LoginResponse } from "../interfaces/LoginResponse";
 import { loginUser } from "../Services/AuthenticateUserService";
+import { Alert } from "react-bootstrap";
 
-export const Login = ({ onRegisterClick }: { onRegisterClick: () => void }) => {
+interface LoginProps {
+    onRegisterClick: () => void;
+}
+
+
+
+export const Login = ({ onRegisterClick }: LoginProps) => {
     //Form login configuration
     const {
         register,
@@ -13,6 +20,13 @@ export const Login = ({ onRegisterClick }: { onRegisterClick: () => void }) => {
         formState: { errors, isSubmitting },
     } = useForm<LoginUserDto>();
     const [showModalForm, setShowModalForm] = useState(true);
+
+
+
+    // State to hold any login error messages
+    const [loginError, setLoginError] = useState<string | null>(null);
+
+
 
     // Handle form submission
     const onSubmit: SubmitHandler<LoginUserDto> = async (data) => {
@@ -22,10 +36,16 @@ export const Login = ({ onRegisterClick }: { onRegisterClick: () => void }) => {
                 const loginResponse: LoginResponse = await response.json();
                 console.log(loginResponse);
                 localStorage.setItem("token", loginResponse.token);
+                // Redirect to the main app page after successful login
+                window.location.href = "/";
+            } else {
+                setLoginError("Invalid email or password.");
             }
             console.log(data);
         }
     };
+
+
 
     return (
         <>
@@ -37,6 +57,13 @@ export const Login = ({ onRegisterClick }: { onRegisterClick: () => void }) => {
                         <div className="login-container">
                             <h2>Welcome back</h2>
                             <p>Sign in to your account</p>
+
+                            {/* Display login error message if there is one */}
+                            {loginError && <Alert key="login-error" variant="danger" dismissible onClose={() => setLoginError(null)}>
+                                {loginError}
+                            </Alert>}
+
+
                             <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className="field">
                                     <label htmlFor="email">Email</label>
