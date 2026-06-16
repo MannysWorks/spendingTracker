@@ -2,7 +2,6 @@ import { useState } from "react";
 import "../css/Navbar.css"
 import ModalForm from "./Modals/ModalForm";
 import { AnimatePresence, motion } from "framer-motion";
-import { NavbarIcon } from "../assets/icons/Icons";
 
 function Navbar({ userName }: { userName: string }) {
     const [showModalForm, setShowModalForm] = useState(false);
