@@ -44,6 +44,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     System.out.println("Path: " + request.getRequestURI());
     System.out.println("Auth header: " + authHeader);
 
+    // If the JWT token stored in the host request is expired
+    // TODO: clean this $#!% Up!
+    // checks if the token is still valid
+    /**
+     * System.out.println( "Is JWT Expired: " + jwtService.isTokenValid( authHeader.substring(7),
+     * userDetailsService.loadUserByUsername(
+     * jwtService.extractUsername(authHeader.substring(7))))); *
+     */
+
     // If this filter can not be applied to the request then
     // call the rest of the filter chain
     if (authHeader == null || !authHeader.startsWith("Bearer ")) {

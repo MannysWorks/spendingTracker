@@ -8,6 +8,7 @@ import com.tracker.SpendingTracker.Services.AuthenticationService;
 import com.tracker.SpendingTracker.Services.JwtService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,11 +18,23 @@ public class AuthenticationController {
 
   private final AuthenticationService authenticationService;
 
+  private final UserDetailsService userDetailsService;
+
   // Constructor
   public AuthenticationController(
-      JwtService jwtService, AuthenticationService authenticationService) {
+      JwtService jwtService,
+      AuthenticationService authenticationService,
+      UserDetailsService userDetailsService) {
     this.authenticationService = authenticationService;
     this.jwtService = jwtService;
+    this.userDetailsService = userDetailsService;
+  }
+
+  @PostMapping("/isTokenValid")
+  public ResponseEntity<Boolean> isJwtTokenExpired(@RequestBody String token) {
+    String user = jwtService.extractUsername(token);
+    return ResponseEntity.ok(
+        jwtService.isTokenValid(token, userDetailsService.loadUserByUsername(user)));
   }
 
   @PostMapping("/signup")
