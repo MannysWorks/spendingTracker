@@ -1,0 +1,126 @@
+/* Login.css — minimalistic styling, primary color #1a6e1a */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+  padding: 24px;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 360px;
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  padding: 24px 20px;
+}
+
+.login-container h2 {
+  margin: 0 0 4px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-align: center;
+}
+
+.login-container p {
+  margin: 0 0 28px;
+  font-size: 0.9rem;
+  color: #6b6b6b;
+  text-align: center;
+}
+
+.login-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #333333;
+}
+
+.field input {
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  border: 1px solid #d4d4d4;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  background: #ffffff;
+  color: #1a1a1a;
+}
+
+.field input::placeholder {
+  color: #aaaaaa;
+}
+
+.field input:focus {
+  border-color: #1a6e1a;
+  box-shadow: 0 0 0 3px rgba(26, 110, 26, 0.15);
+}
+
+.field .error {
+  font-size: 0.8rem;
+  color: #c0392b;
+}
+
+.login-container button[type="submit"] {
+  margin-top: 4px;
+  padding: 11px 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: #1a6e1a;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.login-container button[type="submit"]:hover:not(:disabled) {
+  background: #155a15;
+}
+
+.login-container button[type="submit"]:disabled {
+  background: #8fb98f;
+  cursor: not-allowed;
+}
+
+.register-prompt {
+  margin: 20px 0 0;
+  font-size: 0.85rem;
+  color: #6b6b6b;
+  justify-content: center;
+  gap: 6px;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a6e1a;
+  cursor: pointer;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+.alert-danger {
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
