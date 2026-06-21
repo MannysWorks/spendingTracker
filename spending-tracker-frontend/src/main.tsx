@@ -20,7 +20,8 @@ const handleLoginClick = () => {
   // Navigate to the login page
   window.location.href = "/login";
 }
-// Check if the user is authenticated by looking for a token in localStorage
+
+// Check if the user is authenticated by verifying the presence of a token in localStorage.
 const isAuthenticated = !!localStorage.getItem("token");
 
 const router = createBrowserRouter([

@@ -13,7 +13,7 @@ function Navbar({ userName }: { userName: string }) {
                 {userName}'s Spending Tracker
             </a>
             <a className="navbar-brand navbar-title-display-small-screens m-0" href="#">
-                {userName}, it's time to start traking!
+                {userName}, Start traking!
             </a>
 
             {/* Right side */}
