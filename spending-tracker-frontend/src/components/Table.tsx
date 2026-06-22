@@ -1,5 +1,6 @@
 import type { JSX } from "react"
 import type { Entry } from "../interfaces/Entry"
+import "../css/Table.css"
 
 interface props {
   titles: string[]
@@ -10,24 +11,21 @@ interface props {
   isLoading?: boolean
 }
 
-
 function Table({ titles, entries, onEditClick, onDeleteClick, getFormDataEntry, isLoading }: props) {
-
   const RenderPlaceHolder: () => JSX.Element = () => {
-    return <div className="text-center">
-      <div className="spinner-border" role="status">
-        <span className="visually-hidden">Loading...</span>
+    return <div className="table-loading">
+      <div className="table-spinner" role="status">
+        <span className="sr-only">Loading...</span>
       </div>
     </div>
   }
-
   return isLoading ? RenderPlaceHolder() : <>
-    <div className="table-responsive m-3 rounded">
-      <table className="table table-dark table-striped table-hover">
+    <div className="table-card">
+      <table className="app-table">
         <thead>
           <tr>
             {titles.map((title, index) => {
-              return <th className="text-nowrap" key={index}>{title}</th>
+              return <th key={index}>{title}</th>
             })}
           </tr>
         </thead>
@@ -37,14 +35,14 @@ function Table({ titles, entries, onEditClick, onDeleteClick, getFormDataEntry, 
               {Object.values(entry).map((value, i) => (
                 <td key={i}>{value}</td>
               ))}
-              <td className="d-flex gap-1">
-                <button onClick={() => {
+              <td className="app-table__actions">
+                <button className="app-table__btn app-table__btn--edit" onClick={() => {
                   onEditClick();
                   if (getFormDataEntry) {
                     getFormDataEntry(entry);
                   }
-                }}>edit</button>
-                <button onClick={() => onDeleteClick?.(entry.date)}>delete</button>
+                }}>Edit</button>
+                <button className="app-table__btn app-table__btn--delete" onClick={() => onDeleteClick?.(entry.date)}>Delete</button>
               </td>
             </tr>
           })}
