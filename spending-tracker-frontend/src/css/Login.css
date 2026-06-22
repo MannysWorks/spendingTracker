@@ -1,5 +1,7 @@
 /* Login.css — minimalistic styling, primary color #1a6e1a */
-
+#app-name, #welcome-message {
+  color: #1a6e1a;
+}
 .login-page {
   min-height: 100vh;
   display: flex;

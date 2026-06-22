@@ -46,7 +46,7 @@ export const Login = ({ onRegisterClick }: LoginProps) => {
             {showModalForm && (
                 <div className="login-page">
                     <div className="login-container">
-                        <h2>Welcome back</h2>
+                        <h2 id="welcome-message">Welcome Back Twin!</h2>
                         <p>Sign in to your account</p>
 
                         {/* Display login error message if there is one */}

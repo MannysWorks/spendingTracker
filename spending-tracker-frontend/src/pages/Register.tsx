@@ -38,7 +38,7 @@ export const Register = ({ onLoginClick }: { onLoginClick: () => void }) => {
             {showModalForm && (
                 <div className="login-page">
                     <div className="login-container">
-                        <h2>Create an account</h2>
+                        <h2>Welcome to <span id="app-name">Mannys Spending Tracker</span></h2>
                         <p>Sign up to get started</p>
 
                         {registerError && (
