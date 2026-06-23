@@ -16,6 +16,7 @@ function App() {
 
       <div className="logo-wrapper">
         <NavbarIcon size={40} color="#1a6e1a" />
+        <button className="logoout-btn" onClick={() => { localStorage.removeItem("token"); window.location.href = "/"; }}>Logout</button>
       </div>
       <div className="bg">
         <div className="navbar-wrapper">
