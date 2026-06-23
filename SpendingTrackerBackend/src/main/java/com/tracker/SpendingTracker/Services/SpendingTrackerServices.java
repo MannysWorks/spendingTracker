@@ -2,9 +2,14 @@ package com.tracker.SpendingTracker.Services;
 
 import com.tracker.SpendingTracker.DTO.SpendingTrackerDTO;
 import com.tracker.SpendingTracker.DTOMapper.mapDTO;
+import com.tracker.SpendingTracker.Models.User;
 import com.tracker.SpendingTracker.Models.spendingTracker;
 import com.tracker.SpendingTracker.Repo.SpendingTrackerRepo;
+import com.tracker.SpendingTracker.Repo.UserRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,259 +24,252 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class SpendingTrackerServices {
-    private final SpendingTrackerRepo spendingTrackerRepo;
-    private static final Logger logger = LoggerFactory.getLogger(SpendingTrackerServices.class);
+  private final SpendingTrackerRepo spendingTrackerRepo;
+  private final UserRepo userRepo;
 
-    // ===================== PUBLIC METHODS =====================
-    public List<SpendingTrackerDTO> getDailyTransactions() {
-        List<spendingTracker> spendingTrackerList = spendingTrackerRepo.findAll();
-        List<SpendingTrackerDTO> dtoList = new ArrayList<>();
-        for (spendingTracker s : spendingTrackerList) {
-            dtoList.add(mapDTO.mapSpendingTrackerDto(s));
-        }
-        return dtoList;
+  private static final Logger logger = LoggerFactory.getLogger(SpendingTrackerServices.class);
+
+  // ===================== PUBLIC METHODS =====================
+
+  public List<SpendingTrackerDTO> getDailyTransactions() {
+    User user = getCurrentUser();
+    List<spendingTracker> spendingTrackerList = spendingTrackerRepo.findByUser_Id(user.getId());
+
+    List<SpendingTrackerDTO> dtoList = new ArrayList<>();
+    for (spendingTracker s : spendingTrackerList) {
+      dtoList.add(mapDTO.mapSpendingTrackerDto(s));
     }
-    public List<SpendingTrackerDTO> getDailyTransactions(LocalDate date) {
-        List<spendingTracker> spendingTrackerList = spendingTrackerRepo.findAllByDate(date);
-        List<SpendingTrackerDTO> dtoList = new ArrayList<>();
-        for (spendingTracker s : spendingTrackerList) {
-            dtoList.add(mapDTO.mapSpendingTrackerDto(s));
-        }
-        return dtoList;
+    return dtoList;
+  }
+
+  public List<SpendingTrackerDTO> getDailyTransactions(LocalDate date) {
+    User user = getCurrentUser();
+    List<spendingTracker> spendingTrackerList =
+        spendingTrackerRepo.findAllByUser_IdAndDate(user.getId(), date);
+
+    List<SpendingTrackerDTO> dtoList = new ArrayList<>();
+    for (spendingTracker s : spendingTrackerList) {
+      dtoList.add(mapDTO.mapSpendingTrackerDto(s));
     }
-    public void addDailyTransaction(SpendingTrackerDTO dto) {
-        try {
-            if(spendingTrackerRepo.count() == 0) {
-                addFirstTransaction(dto);
-                return;
-            }
-            Optional<spendingTracker> previousEntry = spendingTrackerRepo.findTopByOrderByDateDesc();
+    return dtoList;
+  }
 
-            BigDecimal previousTotalAssets = previousEntry
-                    .map(spendingTracker::getTotalAssets)
-                    .orElse(BigDecimal.ZERO);
+  public void addDailyTransaction(SpendingTrackerDTO dto) {
+    User user = getCurrentUser();
+    try {
+      if (spendingTrackerRepo.countByUser_Id(user.getId()) == 0) {
+        addFirstTransaction(dto, user);
+        return;
+      }
+      Optional<spendingTracker> previousEntry =
+          spendingTrackerRepo.findTopByUser_IdOrderByDateDesc(user.getId());
 
-            BigDecimal startOfDayBalance = previousEntry
-                    .map(spendingTracker::getEndOfDayBalance)
-                    .orElse(BigDecimal.ZERO);
+      BigDecimal previousTotalAssets =
+          previousEntry.map(spendingTracker::getTotalAssets).orElse(BigDecimal.ZERO);
 
-            BigDecimal endOfDayBalance = calculateEndOfDayBalance(
-                    startOfDayBalance,
-                    nullSafe(dto.getIncome()),
-                    nullSafe(dto.getColdCash()),
-                    nullSafe(dto.getGrocery()),
-                    nullSafe(dto.getFastFood()),
-                    nullSafe(dto.getBills()),
-                    nullSafe(dto.getSubscriptions()),
-                    nullSafe(dto.getGas()),
-                    nullSafe(dto.getShopping()),
-                    nullSafe(dto.getMiscellaneous()),
-                    nullSafe(dto.getRobinHoodTransfer())
-            );
+      BigDecimal startOfDayBalance =
+          previousEntry.map(spendingTracker::getEndOfDayBalance).orElse(BigDecimal.ZERO);
 
-            BigDecimal totalAssets = calculateTotalAssets(endOfDayBalance, nullSafe(dto.getRobinHood()));
-            BigDecimal percentChange = calculatePercentChange(totalAssets, previousTotalAssets);
+      BigDecimal endOfDayBalance =
+          calculateEndOfDayBalance(
+              startOfDayBalance,
+              nullSafe(dto.getIncome()),
+              nullSafe(dto.getColdCash()),
+              nullSafe(dto.getGrocery()),
+              nullSafe(dto.getFastFood()),
+              nullSafe(dto.getBills()),
+              nullSafe(dto.getSubscriptions()),
+              nullSafe(dto.getGas()),
+              nullSafe(dto.getShopping()),
+              nullSafe(dto.getMiscellaneous()),
+              nullSafe(dto.getRobinHoodTransfer()));
 
-            spendingTracker entity = new spendingTracker();
-            /* If the date is not specified, it defaults to today */
-            if(dto.getDate() != null ) {
-                entity.setDate(dto.getDate());
-            }
-            entity.setIncome(nullSafe(dto.getIncome()));
-            entity.setStartOfDayBalance(startOfDayBalance);
-            entity.setColdCash(nullSafe(dto.getColdCash()));
-            entity.setGrocery(nullSafe(dto.getGrocery()));
-            entity.setFastFood(nullSafe(dto.getFastFood()));
-            entity.setBills(nullSafe(dto.getBills()));
-            entity.setSubscriptions(nullSafe(dto.getSubscriptions()));
-            entity.setGas(nullSafe(dto.getGas()));
-            entity.setShopping(nullSafe(dto.getShopping()));
-            entity.setMiscellaneous(nullSafe(dto.getMiscellaneous()));
-            entity.setRobinHoodTransfer(nullSafe(dto.getRobinHoodTransfer()));
-            entity.setRobinHood(nullSafe(dto.getRobinHood()));
-            entity.setEndOfDayBalance(endOfDayBalance);
-            entity.setTotalAssets(totalAssets);
-            entity.setPercentChange(percentChange);
+      BigDecimal totalAssets = calculateTotalAssets(endOfDayBalance, nullSafe(dto.getRobinHood()));
+      BigDecimal percentChange = calculatePercentChange(totalAssets, previousTotalAssets);
 
-            spendingTrackerRepo.save(entity);
-            logger.info("Successfully saved transaction for date: {}", dto.getDate());
+      spendingTracker entity = new spendingTracker();
+      entity.setUser(user); // <-- scope the new row to the logged-in user
+      if (dto.getDate() != null) {
+        entity.setDate(dto.getDate());
+      }
+      entity.setIncome(nullSafe(dto.getIncome()));
+      entity.setStartOfDayBalance(startOfDayBalance);
+      entity.setColdCash(nullSafe(dto.getColdCash()));
+      entity.setGrocery(nullSafe(dto.getGrocery()));
+      entity.setFastFood(nullSafe(dto.getFastFood()));
+      entity.setBills(nullSafe(dto.getBills()));
+      entity.setSubscriptions(nullSafe(dto.getSubscriptions()));
+      entity.setGas(nullSafe(dto.getGas()));
+      entity.setShopping(nullSafe(dto.getShopping()));
+      entity.setMiscellaneous(nullSafe(dto.getMiscellaneous()));
+      entity.setRobinHoodTransfer(nullSafe(dto.getRobinHoodTransfer()));
+      entity.setRobinHood(nullSafe(dto.getRobinHood()));
+      entity.setEndOfDayBalance(endOfDayBalance);
+      entity.setTotalAssets(totalAssets);
+      entity.setPercentChange(percentChange);
 
-        } catch (Exception e) {
-            logger.error("Error saving daily transaction: ", e);
-        }
+      spendingTrackerRepo.save(entity);
+      logger.info("Successfully saved transaction for date: {}", dto.getDate());
+
+    } catch (Exception e) {
+      logger.error("Error saving daily transaction: ", e);
     }
-    public void editTransaction(LocalDate date, SpendingTrackerDTO dto) {
-        try {
-            Optional<spendingTracker> previousEntry = spendingTrackerRepo.findTopByDateBeforeOrderByDateDesc(date);
-            BigDecimal previousTotalAssets = previousEntry
-                    .map(spendingTracker::getTotalAssets)
-                    .orElse(BigDecimal.ZERO);
+  }
 
-            spendingTracker existing = spendingTrackerRepo.findByDate(date)
-                    .orElseThrow(() -> new RuntimeException("Transaction not found with date: " + date));
+  public void editTransaction(LocalDate date, SpendingTrackerDTO dto) {
+    User user = getCurrentUser();
+    try {
+      Optional<spendingTracker> previousEntry =
+          spendingTrackerRepo.findTopByUser_IdAndDateBeforeOrderByDateDesc(user.getId(), date);
+      BigDecimal previousTotalAssets =
+          previousEntry.map(spendingTracker::getTotalAssets).orElse(BigDecimal.ZERO);
 
-            if (dto.getDate() != null) existing.setDate(dto.getDate());
-            if (dto.getIncome() != null) existing.setIncome(dto.getIncome());
-            if (dto.getColdCash() != null) existing.setColdCash(dto.getColdCash());
-            if (dto.getGrocery() != null) existing.setGrocery(dto.getGrocery());
-            if (dto.getFastFood() != null) existing.setFastFood(dto.getFastFood());
-            if (dto.getBills() != null) existing.setBills(dto.getBills());
-            if (dto.getSubscriptions() != null) existing.setSubscriptions(dto.getSubscriptions());
-            if (dto.getGas() != null) existing.setGas(dto.getGas());
-            if (dto.getShopping() != null) existing.setShopping(dto.getShopping());
-            if (dto.getMiscellaneous() != null) existing.setMiscellaneous(dto.getMiscellaneous());
-            if (dto.getRobinHoodTransfer() != null) existing.setRobinHoodTransfer(dto.getRobinHoodTransfer());
-            if (dto.getRobinHood() != null) existing.setRobinHood(dto.getRobinHood());
+      spendingTracker existing =
+          spendingTrackerRepo
+              .findByUser_IdAndDate(user.getId(), date)
+              .orElseThrow(() -> new RuntimeException("Transaction not found with date: " + date));
 
-            // Recalculate derived fields using the updated entity values
-            BigDecimal endOfDayBalance = calculateEndOfDayBalance(
-                    existing.getStartOfDayBalance(),
-                    nullSafe(existing.getIncome()),
-                    nullSafe(existing.getColdCash()),
-                    nullSafe(existing.getGrocery()),
-                    nullSafe(existing.getFastFood()),
-                    nullSafe(existing.getBills()),
-                    nullSafe(existing.getSubscriptions()),
-                    nullSafe(existing.getGas()),
-                    nullSafe(existing.getShopping()),
-                    nullSafe(existing.getMiscellaneous()),
-                    nullSafe(existing.getRobinHoodTransfer())
-            );
+      if (dto.getDate() != null) existing.setDate(dto.getDate());
+      if (dto.getIncome() != null) existing.setIncome(dto.getIncome());
+      if (dto.getColdCash() != null) existing.setColdCash(dto.getColdCash());
+      if (dto.getGrocery() != null) existing.setGrocery(dto.getGrocery());
+      if (dto.getFastFood() != null) existing.setFastFood(dto.getFastFood());
+      if (dto.getBills() != null) existing.setBills(dto.getBills());
+      if (dto.getSubscriptions() != null) existing.setSubscriptions(dto.getSubscriptions());
+      if (dto.getGas() != null) existing.setGas(dto.getGas());
+      if (dto.getShopping() != null) existing.setShopping(dto.getShopping());
+      if (dto.getMiscellaneous() != null) existing.setMiscellaneous(dto.getMiscellaneous());
+      if (dto.getRobinHoodTransfer() != null)
+        existing.setRobinHoodTransfer(dto.getRobinHoodTransfer());
+      if (dto.getRobinHood() != null) existing.setRobinHood(dto.getRobinHood());
 
-            BigDecimal totalAssets = calculateTotalAssets(endOfDayBalance, nullSafe(existing.getRobinHood()));
-            BigDecimal percentChange = calculatePercentChange(totalAssets, previousTotalAssets);
-            logger.info("total assets {}", totalAssets);
-            logger.info("prev Total assets {}", previousTotalAssets);
+      BigDecimal endOfDayBalance =
+          calculateEndOfDayBalance(
+              existing.getStartOfDayBalance(),
+              nullSafe(existing.getIncome()),
+              nullSafe(existing.getColdCash()),
+              nullSafe(existing.getGrocery()),
+              nullSafe(existing.getFastFood()),
+              nullSafe(existing.getBills()),
+              nullSafe(existing.getSubscriptions()),
+              nullSafe(existing.getGas()),
+              nullSafe(existing.getShopping()),
+              nullSafe(existing.getMiscellaneous()),
+              nullSafe(existing.getRobinHoodTransfer()));
 
-            existing.setEndOfDayBalance(endOfDayBalance);
-            existing.setTotalAssets(totalAssets);
-            existing.setPercentChange(percentChange);
+      BigDecimal totalAssets =
+          calculateTotalAssets(endOfDayBalance, nullSafe(existing.getRobinHood()));
+      BigDecimal percentChange = calculatePercentChange(totalAssets, previousTotalAssets);
+      logger.info("total assets {}", totalAssets);
+      logger.info("prev Total assets {}", previousTotalAssets);
 
-            spendingTrackerRepo.save(existing);
+      existing.setEndOfDayBalance(endOfDayBalance);
+      existing.setTotalAssets(totalAssets);
+      existing.setPercentChange(percentChange);
 
-            calculateAllTransactionsAfterSpecificEntry(existing);
+      spendingTrackerRepo.save(existing);
 
-            logger.info("Successfully edited transaction with date: {}", date);
+      calculateAllTransactionsAfterSpecificEntry(existing, user);
 
-        } catch (Exception e) {
-            logger.error("Error editing transaction: ", e);
-        }
+      logger.info("Successfully edited transaction with date: {}", date);
+
+    } catch (Exception e) {
+      logger.error("Error editing transaction: ", e);
     }
-    public void editTransaction(Long id, SpendingTrackerDTO dto) {
-        try {
-            spendingTracker existing = spendingTrackerRepo.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Transaction not found with id: " + id));
+  }
 
-            if (dto.getDate() != null) existing.setDate(dto.getDate());
-            if (dto.getIncome() != null) existing.setIncome(dto.getIncome());
-            if (dto.getColdCash() != null) existing.setColdCash(dto.getColdCash());
-            if (dto.getGrocery() != null) existing.setGrocery(dto.getGrocery());
-            if (dto.getFastFood() != null) existing.setFastFood(dto.getFastFood());
-            if (dto.getBills() != null) existing.setBills(dto.getBills());
-            if (dto.getSubscriptions() != null) existing.setSubscriptions(dto.getSubscriptions());
-            if (dto.getGas() != null) existing.setGas(dto.getGas());
-            if (dto.getShopping() != null) existing.setShopping(dto.getShopping());
-            if (dto.getMiscellaneous() != null) existing.setMiscellaneous(dto.getMiscellaneous());
-            if (dto.getRobinHoodTransfer() != null) existing.setRobinHoodTransfer(dto.getRobinHoodTransfer());
-            if (dto.getRobinHood() != null) existing.setRobinHood(dto.getRobinHood());
+  public void editTransaction(Long id, SpendingTrackerDTO dto) {
+    User user = getCurrentUser();
+    try {
+      spendingTracker existing =
+          spendingTrackerRepo
+              .findById(id)
+              .filter(s -> s.getUser().getId().equals(user.getId())) // <-- ownership check
+              .orElseThrow(() -> new RuntimeException("Transaction not found with id: " + id));
 
-            // Recalculate derived fields using the updated entity values
-            BigDecimal endOfDayBalance = calculateEndOfDayBalance(
-                    existing.getStartOfDayBalance(),
-                    nullSafe(existing.getIncome()),
-                    nullSafe(existing.getColdCash()),
-                    nullSafe(existing.getGrocery()),
-                    nullSafe(existing.getFastFood()),
-                    nullSafe(existing.getBills()),
-                    nullSafe(existing.getSubscriptions()),
-                    nullSafe(existing.getGas()),
-                    nullSafe(existing.getShopping()),
-                    nullSafe(existing.getMiscellaneous()),
-                    nullSafe(existing.getRobinHoodTransfer())
-            );
+      if (dto.getDate() != null) existing.setDate(dto.getDate());
+      if (dto.getIncome() != null) existing.setIncome(dto.getIncome());
+      if (dto.getColdCash() != null) existing.setColdCash(dto.getColdCash());
+      if (dto.getGrocery() != null) existing.setGrocery(dto.getGrocery());
+      if (dto.getFastFood() != null) existing.setFastFood(dto.getFastFood());
+      if (dto.getBills() != null) existing.setBills(dto.getBills());
+      if (dto.getSubscriptions() != null) existing.setSubscriptions(dto.getSubscriptions());
+      if (dto.getGas() != null) existing.setGas(dto.getGas());
+      if (dto.getShopping() != null) existing.setShopping(dto.getShopping());
+      if (dto.getMiscellaneous() != null) existing.setMiscellaneous(dto.getMiscellaneous());
+      if (dto.getRobinHoodTransfer() != null)
+        existing.setRobinHoodTransfer(dto.getRobinHoodTransfer());
+      if (dto.getRobinHood() != null) existing.setRobinHood(dto.getRobinHood());
 
-            BigDecimal totalAssets = calculateTotalAssets(endOfDayBalance, nullSafe(existing.getRobinHood()));
+      BigDecimal endOfDayBalance =
+          calculateEndOfDayBalance(
+              existing.getStartOfDayBalance(),
+              nullSafe(existing.getIncome()),
+              nullSafe(existing.getColdCash()),
+              nullSafe(existing.getGrocery()),
+              nullSafe(existing.getFastFood()),
+              nullSafe(existing.getBills()),
+              nullSafe(existing.getSubscriptions()),
+              nullSafe(existing.getGas()),
+              nullSafe(existing.getShopping()),
+              nullSafe(existing.getMiscellaneous()),
+              nullSafe(existing.getRobinHoodTransfer()));
 
-            existing.setEndOfDayBalance(endOfDayBalance);
-            existing.setTotalAssets(totalAssets);
+      BigDecimal totalAssets =
+          calculateTotalAssets(endOfDayBalance, nullSafe(existing.getRobinHood()));
 
-            spendingTrackerRepo.save(existing);
-            calculateAllTransactionsAfterSpecificEntry(existing);
-            logger.info("Successfully edited transaction with id: {}", id);
+      existing.setEndOfDayBalance(endOfDayBalance);
+      existing.setTotalAssets(totalAssets);
 
-        } catch (Exception e) {
-            logger.error("Error editing transaction: ", e);
-        }
+      spendingTrackerRepo.save(existing);
+      calculateAllTransactionsAfterSpecificEntry(existing, user);
+      logger.info("Successfully edited transaction with id: {}", id);
+
+    } catch (Exception e) {
+      logger.error("Error editing transaction: ", e);
     }
-    public void deleteTransaction(LocalDate date) {
-        spendingTracker entity = spendingTrackerRepo.findByDate(date)
-                .orElseThrow(() -> new RuntimeException("Transaction not found with date: " + date));
-        spendingTrackerRepo.delete(entity);
-        logger.info("Successfully deleted transaction with date: " + date);
-    }
-    // ===================== PRIVATE HELPERS =====================
-    private void calculateAllTransactionsAfterSpecificEntry(spendingTracker spendingTracker) {
-        List<spendingTracker> entryList = spendingTrackerRepo.findByDateAfter(spendingTracker.getDate());
+  }
 
-        for(spendingTracker entry : entryList) {
-            SpendingTrackerDTO dto = mapDTO.mapSpendingTrackerDto(entry);
-            try {
-            Optional<spendingTracker> previousEntry = spendingTrackerRepo.findTopByDateBeforeOrderByDateDesc(entry.getDate());
+  public void deleteTransaction(LocalDate date) {
+    User user = getCurrentUser();
+    spendingTracker entity =
+        spendingTrackerRepo
+            .findByUser_IdAndDate(user.getId(), date)
+            .orElseThrow(() -> new RuntimeException("Transaction not found with date: " + date));
+    spendingTrackerRepo.delete(entity);
+    logger.info("Successfully deleted transaction with date: " + date);
+  }
 
-            BigDecimal previousTotalAssets = previousEntry
-                    .map(s -> s.getTotalAssets())
-                    .orElse(BigDecimal.ZERO);
+  // ===================== PRIVATE HELPERS =====================
 
-            BigDecimal startOfDayBalance = previousEntry
-                    .map(s -> s.getEndOfDayBalance())
-                    .orElse(BigDecimal.ZERO);
+  private User getCurrentUser() {
+    String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+    return userRepo
+        .findByUsername(userName)
+        .orElseThrow(() -> new UsernameNotFoundException("This user doesn't seem to exist!"));
+  }
 
-            BigDecimal endOfDayBalance = calculateEndOfDayBalance(
-                    startOfDayBalance,
-                    nullSafe(dto.getIncome()),
-                    nullSafe(dto.getColdCash()),
-                    nullSafe(dto.getGrocery()),
-                    nullSafe(dto.getFastFood()),
-                    nullSafe(dto.getBills()),
-                    nullSafe(dto.getSubscriptions()),
-                    nullSafe(dto.getGas()),
-                    nullSafe(dto.getShopping()),
-                    nullSafe(dto.getMiscellaneous()),
-                    nullSafe(dto.getRobinHoodTransfer())
-            );
+  private void calculateAllTransactionsAfterSpecificEntry(
+      spendingTracker spendingTracker, User user) {
+    List<spendingTracker> entryList =
+        spendingTrackerRepo.findByUser_IdAndDateAfter(user.getId(), spendingTracker.getDate());
 
-            BigDecimal totalAssets = calculateTotalAssets(endOfDayBalance, nullSafe(dto.getRobinHood()));
-            BigDecimal percentChange = calculatePercentChange(totalAssets, previousTotalAssets);
+    for (spendingTracker entry : entryList) {
+      SpendingTrackerDTO dto = mapDTO.mapSpendingTrackerDto(entry);
+      try {
+        Optional<spendingTracker> previousEntry =
+            spendingTrackerRepo.findTopByUser_IdAndDateBeforeOrderByDateDesc(
+                user.getId(), entry.getDate());
 
+        BigDecimal previousTotalAssets =
+            previousEntry.map(s -> s.getTotalAssets()).orElse(BigDecimal.ZERO);
 
-            entry.setDate(dto.getDate());
-            entry.setIncome(nullSafe(dto.getIncome()));
-            entry.setStartOfDayBalance(startOfDayBalance);
-            entry.setColdCash(nullSafe(dto.getColdCash()));
-            entry.setGrocery(nullSafe(dto.getGrocery()));
-            entry.setFastFood(nullSafe(dto.getFastFood()));
-            entry.setBills(nullSafe(dto.getBills()));
-            entry.setSubscriptions(nullSafe(dto.getSubscriptions()));
-            entry.setGas(nullSafe(dto.getGas()));
-            entry.setShopping(nullSafe(dto.getShopping()));
-            entry.setMiscellaneous(nullSafe(dto.getMiscellaneous()));
-            entry.setRobinHoodTransfer(nullSafe(dto.getRobinHoodTransfer()));
-            entry.setRobinHood(nullSafe(dto.getRobinHood()));
-            entry.setEndOfDayBalance(endOfDayBalance);
-            entry.setTotalAssets(totalAssets);
-            entry.setPercentChange(percentChange);
+        BigDecimal startOfDayBalance =
+            previousEntry.map(s -> s.getEndOfDayBalance()).orElse(BigDecimal.ZERO);
 
-            spendingTrackerRepo.save(entry);
-            logger.info("Successfully saved transaction for date: {}", dto.getDate());
-
-        } catch (Exception e) {
-            logger.error("Error saving daily transaction: ", e);
-        }
-        }
-    }
-    private void addFirstTransaction(SpendingTrackerDTO dto) {
-        BigDecimal endOfDayBalance = calculateEndOfDayBalance(
-                nullSafe(dto.getStartOfDayBalance()),
+        BigDecimal endOfDayBalance =
+            calculateEndOfDayBalance(
+                startOfDayBalance,
                 nullSafe(dto.getIncome()),
                 nullSafe(dto.getColdCash()),
                 nullSafe(dto.getGrocery()),
@@ -281,70 +279,118 @@ public class SpendingTrackerServices {
                 nullSafe(dto.getGas()),
                 nullSafe(dto.getShopping()),
                 nullSafe(dto.getMiscellaneous()),
-                nullSafe(dto.getRobinHoodTransfer())
-        );
-        try {
-            spendingTracker entity = new spendingTracker();
-            entity.setDate(dto.getDate());
-            entity.setIncome(nullSafe(dto.getIncome()));
-            entity.setStartOfDayBalance(nullSafe(dto.getStartOfDayBalance()));
-            entity.setColdCash(nullSafe(dto.getColdCash()));
-            entity.setGrocery(nullSafe(dto.getGrocery()));
-            entity.setFastFood(nullSafe(dto.getFastFood()));
-            entity.setBills(nullSafe(dto.getBills()));
-            entity.setSubscriptions(nullSafe(dto.getSubscriptions()));
-            entity.setGas(nullSafe(dto.getGas()));
-            entity.setShopping(nullSafe(dto.getShopping()));
-            entity.setMiscellaneous(nullSafe(dto.getMiscellaneous()));
-            entity.setRobinHoodTransfer(nullSafe(dto.getRobinHoodTransfer()));
-            entity.setRobinHood(nullSafe(dto.getRobinHood()));
-            entity.setEndOfDayBalance(endOfDayBalance);
-            entity.setTotalAssets(calculateTotalAssets(entity.getEndOfDayBalance(), entity.getRobinHood()));
-            entity.setPercentChange(nullSafe(dto.getPercentChange()));
+                nullSafe(dto.getRobinHoodTransfer()));
 
-            spendingTrackerRepo.save(entity);
-        } catch (Exception e) {
-            logger.error("Error saving daily transaction: ", e);
-        }
-    }
-    private BigDecimal calculateEndOfDayBalance(
-            BigDecimal startOfDayBalance,
-            BigDecimal income,
-            BigDecimal coldCash,
-            BigDecimal grocery,
-            BigDecimal fastFood,
-            BigDecimal bills,
-            BigDecimal subscriptions,
-            BigDecimal gas,
-            BigDecimal shopping,
-            BigDecimal miscellaneous,
-            BigDecimal robinHoodTransfer) {
+        BigDecimal totalAssets =
+            calculateTotalAssets(endOfDayBalance, nullSafe(dto.getRobinHood()));
+        BigDecimal percentChange = calculatePercentChange(totalAssets, previousTotalAssets);
 
-        return startOfDayBalance
-                .add(income)
-                .add(coldCash)
-                .subtract(grocery)
-                .subtract(fastFood)
-                .subtract(bills)
-                .subtract(subscriptions)
-                .subtract(gas)
-                .subtract(shopping)
-                .subtract(miscellaneous)
-                .subtract(robinHoodTransfer);
-    }
+        entry.setDate(dto.getDate());
+        entry.setIncome(nullSafe(dto.getIncome()));
+        entry.setStartOfDayBalance(startOfDayBalance);
+        entry.setColdCash(nullSafe(dto.getColdCash()));
+        entry.setGrocery(nullSafe(dto.getGrocery()));
+        entry.setFastFood(nullSafe(dto.getFastFood()));
+        entry.setBills(nullSafe(dto.getBills()));
+        entry.setSubscriptions(nullSafe(dto.getSubscriptions()));
+        entry.setGas(nullSafe(dto.getGas()));
+        entry.setShopping(nullSafe(dto.getShopping()));
+        entry.setMiscellaneous(nullSafe(dto.getMiscellaneous()));
+        entry.setRobinHoodTransfer(nullSafe(dto.getRobinHoodTransfer()));
+        entry.setRobinHood(nullSafe(dto.getRobinHood()));
+        entry.setEndOfDayBalance(endOfDayBalance);
+        entry.setTotalAssets(totalAssets);
+        entry.setPercentChange(percentChange);
 
-    private BigDecimal calculateTotalAssets(BigDecimal endOfDayBalance, BigDecimal robinHood) {
-        return endOfDayBalance.add(robinHood);
-    }
+        spendingTrackerRepo.save(entry);
+        logger.info("Successfully saved transaction for date: {}", dto.getDate());
 
-    private BigDecimal calculatePercentChange(BigDecimal current, BigDecimal previous) {
-        if (previous.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
-        return current.subtract(previous)
-                .divide(previous, 4, RoundingMode.HALF_UP)
-                .multiply(new BigDecimal("100"));
+      } catch (Exception e) {
+        logger.error("Error saving daily transaction: ", e);
+      }
     }
+  }
 
-    private BigDecimal nullSafe(BigDecimal value) {
-        return value == null ? BigDecimal.ZERO : value;
+  private void addFirstTransaction(SpendingTrackerDTO dto, User user) {
+    BigDecimal endOfDayBalance =
+        calculateEndOfDayBalance(
+            nullSafe(dto.getStartOfDayBalance()),
+            nullSafe(dto.getIncome()),
+            nullSafe(dto.getColdCash()),
+            nullSafe(dto.getGrocery()),
+            nullSafe(dto.getFastFood()),
+            nullSafe(dto.getBills()),
+            nullSafe(dto.getSubscriptions()),
+            nullSafe(dto.getGas()),
+            nullSafe(dto.getShopping()),
+            nullSafe(dto.getMiscellaneous()),
+            nullSafe(dto.getRobinHoodTransfer()));
+    try {
+      spendingTracker entity = new spendingTracker();
+      entity.setUser(user); // <-- scope the first row too
+      entity.setDate(dto.getDate());
+      entity.setIncome(nullSafe(dto.getIncome()));
+      entity.setStartOfDayBalance(nullSafe(dto.getStartOfDayBalance()));
+      entity.setColdCash(nullSafe(dto.getColdCash()));
+      entity.setGrocery(nullSafe(dto.getGrocery()));
+      entity.setFastFood(nullSafe(dto.getFastFood()));
+      entity.setBills(nullSafe(dto.getBills()));
+      entity.setSubscriptions(nullSafe(dto.getSubscriptions()));
+      entity.setGas(nullSafe(dto.getGas()));
+      entity.setShopping(nullSafe(dto.getShopping()));
+      entity.setMiscellaneous(nullSafe(dto.getMiscellaneous()));
+      entity.setRobinHoodTransfer(nullSafe(dto.getRobinHoodTransfer()));
+      entity.setRobinHood(nullSafe(dto.getRobinHood()));
+      entity.setEndOfDayBalance(endOfDayBalance);
+      entity.setTotalAssets(
+          calculateTotalAssets(entity.getEndOfDayBalance(), entity.getRobinHood()));
+      entity.setPercentChange(nullSafe(dto.getPercentChange()));
+
+      spendingTrackerRepo.save(entity);
+    } catch (Exception e) {
+      logger.error("Error saving daily transaction: ", e);
     }
+  }
+
+  private BigDecimal calculateEndOfDayBalance(
+      BigDecimal startOfDayBalance,
+      BigDecimal income,
+      BigDecimal coldCash,
+      BigDecimal grocery,
+      BigDecimal fastFood,
+      BigDecimal bills,
+      BigDecimal subscriptions,
+      BigDecimal gas,
+      BigDecimal shopping,
+      BigDecimal miscellaneous,
+      BigDecimal robinHoodTransfer) {
+
+    return startOfDayBalance
+        .add(income)
+        .add(coldCash)
+        .subtract(grocery)
+        .subtract(fastFood)
+        .subtract(bills)
+        .subtract(subscriptions)
+        .subtract(gas)
+        .subtract(shopping)
+        .subtract(miscellaneous)
+        .subtract(robinHoodTransfer);
+  }
+
+  private BigDecimal calculateTotalAssets(BigDecimal endOfDayBalance, BigDecimal robinHood) {
+    return endOfDayBalance.add(robinHood);
+  }
+
+  private BigDecimal calculatePercentChange(BigDecimal current, BigDecimal previous) {
+    if (previous.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
+    return current
+        .subtract(previous)
+        .divide(previous, 4, RoundingMode.HALF_UP)
+        .multiply(new BigDecimal("100"));
+  }
+
+  private BigDecimal nullSafe(BigDecimal value) {
+    return value == null ? BigDecimal.ZERO : value;
+  }
 }
