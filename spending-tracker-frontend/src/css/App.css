@@ -20,6 +20,14 @@
     align-items: center;
 }
 
+.logout-btn {
+    position: absolute;
+    right: 0;
+    top: 16px; 
+    right: 16px;
+    display: flex;
+}
+
 
 #view-table-btn {
     position: fixed;
