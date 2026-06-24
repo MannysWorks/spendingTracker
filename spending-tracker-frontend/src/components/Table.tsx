@@ -33,7 +33,11 @@ function Table({ titles, entries, onEditClick, onDeleteClick, getFormDataEntry, 
           {entries.map((entry, index) => {
             return <tr key={index}>
               {Object.values(entry).map((value, i) => (
-                <td key={i}>{value}</td>
+                // The first column (index 0) is the date, which is displayed as-is. 
+                // All other columns are assumed to be numeric values and are prefixed with a dollar sign.
+                i === 0 ?
+                  <td key={i}>{value}</td> :
+                  <td key={i}>{`$${value}`}</td>
               ))}
               <td className="app-table__actions">
                 <button className="app-table__btn app-table__btn--edit" onClick={() => {
