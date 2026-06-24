@@ -9,7 +9,6 @@ import Pagination from "../Pagination";
 
 import { deleteEntry, getEntries, handleResponse } from "../../Services/EntryService";
 
-
 function Modal({ onClose, onRefresh }: { onClose: () => void; onRefresh: () => void; }) {
     const [entries, setEntries] = useState<Entry[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -49,6 +48,7 @@ function Modal({ onClose, onRefresh }: { onClose: () => void; onRefresh: () => v
     const HandleDeleteEntry = async (date: string) => {
         const response = await deleteEntry(date);
         setShowToastForDelete(false);
+        console.log("Delete response:", response);
         handleResponse(response, setShowToast, setToastMessage);
         onRefresh();
     }
@@ -74,14 +74,20 @@ function Modal({ onClose, onRefresh }: { onClose: () => void; onRefresh: () => v
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.90 }}
             transition={{ duration: 0.2 }}>
-            <div className="modal-dialog modal-fullscreen">
+            <div className="modal-dialog modal-fullscreen main-modal-dialog">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h1 className="modal-title fs-5">Current Entries</h1>
+                        <div>
+                            <h1 className="modal-title fs-3">Current Entries</h1>
+                            <h5 className="modal-title fs-6 mb-0 text-secondary">Daily cashflow, spending, transfers, and total assets at a glance.</h5>
+                        </div>
                         <button className="btn-close" onClick={onClose}></button>
                     </div>
+
                     <div className="modal-body">
+
                         <AssetSummary
+                            totalAssetsChange={lastEntry?.percentChange}
                             totalAssets={lastEntry?.totalAssets}
                             endOfDayBal={lastEntry?.endOfDayBalance}
                             percentChange={lastEntry?.percentChange}
@@ -104,6 +110,8 @@ function Modal({ onClose, onRefresh }: { onClose: () => void; onRefresh: () => v
                             setCurrentPage={setCurrentPage}
                             currentPage={currentPage} />
                     </div>
+
+
                     {showModalFormForEdit && <ModalForm
                         onClose={() => {
                             setShowModalFormForEdit(false)

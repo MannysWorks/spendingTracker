@@ -1,0 +1,76 @@
+.asset-card {
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+    height: 100%;
+    background: #ffffff;
+}
+
+.asset-card__header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+}
+
+.asset-card__title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #8a9199;
+}
+
+.asset-card__value-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.asset-card__value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1c1c1c;
+}
+
+/* Highlight (Total Assets) */
+.asset-card--highlight {
+    background: #f1f8f1;
+}
+
+.asset-card--highlight .asset-card__title {
+    color: #4a5a4a;
+}
+
+.asset-card__icon-badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #1a6e1a;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.asset-card__change {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #1a6e1a;
+}
+
+/* Dark (Percent Change) */
+.asset-card--dark {
+    background: #14181a;
+}
+
+.asset-card--dark .asset-card__title {
+    color: #9aa0a6;
+}
+
+.asset-card--dark .asset-card__value {
+    color: #ffffff;
+}
+
+.asset-card__trend-icon {
+    color: #4ade80;
+}

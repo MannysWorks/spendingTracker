@@ -1,35 +1,43 @@
 import { type ReactNode } from "react"
 import Card from "./Card"
+
 interface props {
     totalAssets: number
+    totalAssetsChange: number
     endOfDayBal: number
     RobinHoodBal: number
     percentChange: number
     isLoading: boolean
 }
-function AssetSummary({ totalAssets, endOfDayBal, RobinHoodBal, percentChange, isLoading }: props) {
+
+function AssetSummary({ totalAssets, totalAssetsChange, endOfDayBal, RobinHoodBal, percentChange, isLoading }: props) {
     const placeHolder: ReactNode =
         <div className="col-12 col-lg-3 col-sm-6 mb-2 pe-2 placeholder-glow">
-            <div className="placeholder rounded w-100" style={{ height: '75px' }}>
+            <div className="placeholder rounded w-100" style={{ height: '110px' }}>
             </div>
         </div>
 
-    const renderCard = (body: number, title: string) => (
+    const renderCard = (
+        body: number,
+        title: string,
+        variant: "highlight" | "default" | "dark" = "default",
+        format: "currency" | "percent" = "currency",
+        change?: number
+    ) => (
         isLoading ? placeHolder :
             <div className="col-12 col-lg-3 col-sm-6 mb-2 pe-2">
-                <Card cardBody={body} cardTitle={title}></Card>
+                <Card cardBody={body} cardTitle={title} variant={variant} format={format} change={change} />
             </div>
     )
 
     return (
         <div className="row p-3 pb-0">
-            {renderCard(totalAssets, "Total Assets")}
+            {renderCard(totalAssets, "Total Assets", "highlight", "currency", totalAssetsChange)}
             {renderCard(endOfDayBal, "End of Day Balance")}
-            {renderCard(RobinHoodBal, "RobinHood Balance")}
-            {renderCard(percentChange, "Percent Change")}
+            {renderCard(RobinHoodBal, "Robin Hood")}
+            {renderCard(percentChange, "Percent Change", "dark", "percent")}
         </div>
     )
 }
-
 
 export default AssetSummary

@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import '../../css/GenericModal.css'
 
 interface GenericModalProps {
-    onClose: () => void;
+    onClose?: () => void;
     body: ReactNode;
     title?: string;
     onSave?: () => void;

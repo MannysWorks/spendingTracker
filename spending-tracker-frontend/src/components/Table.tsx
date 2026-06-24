@@ -32,13 +32,17 @@ function Table({ titles, entries, onEditClick, onDeleteClick, getFormDataEntry, 
         <tbody>
           {entries.map((entry, index) => {
             return <tr key={index}>
-              {Object.values(entry).map((value, i) => (
-                // The first column (index 0) is the date, which is displayed as-is. 
-                // All other columns are assumed to be numeric values and are prefixed with a dollar sign.
-                i === 0 ?
-                  <td key={i}>{value}</td> :
-                  <td key={i}>{`$${value}`}</td>
-              ))}
+              {Object.values(entry).map((value, i, arr) => {
+                if (i === 0) {
+                  // first column: date, shown as-is
+                  return <td key={i}>{value}</td>
+                }
+                if (i === arr.length - 1) {
+                  // last column: percent change
+                  return <td key={i}>{`${value}%`}</td>
+                }
+                return <td key={i}>{`$${value}`}</td>
+              })}
               <td className="app-table__actions">
                 <button className="app-table__btn app-table__btn--edit" onClick={() => {
                   onEditClick();
