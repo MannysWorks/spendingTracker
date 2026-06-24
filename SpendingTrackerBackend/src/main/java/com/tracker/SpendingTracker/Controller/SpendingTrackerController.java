@@ -81,7 +81,7 @@ public class SpendingTrackerController {
     }
     spendingTrackerServices.deleteTransaction(date);
     return new ResponseEntity<>(
-        "Successfully deleted transaction with date: " + date, HttpStatus.OK);
+        "Successfully deleted transaction with date: " + date, HttpStatus.ACCEPTED);
   }
 
   /*----------- Private Helpers (Mostly for repeating logic) ---------------*/
