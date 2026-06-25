@@ -75,6 +75,10 @@
     color: #ffffff;
 }
 
-.asset-card__trend-icon {
+.asset-card__trend-icon--down{ 
+    color: #ff0000
+}
+ 
+.asset-card__trend-icon{
     color: #4ade80;
 }

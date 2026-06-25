@@ -36,7 +36,7 @@ function AssetSummary({ totalAssets, totalAssetsChange, endOfDayBal, RobinHoodBa
             {renderCard(totalAssets, "Total Assets", "highlight", "currency", totalAssetsChange)}
             {renderCard(endOfDayBal, "End of Day Balance", "default", "currency", endOfDayBal, true)}
             {renderCard(RobinHoodBal, "Robin Hood", "default", "currency", RobinHoodBal, true)}
-            {renderCard(percentChange, "Percent Change", "dark", "percent")}
+            {renderCard(percentChange, "Percent Change", "dark", "percent", percentChange)}
         </div>
     )
 }

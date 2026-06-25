@@ -1,5 +1,4 @@
-import { type ReactNode } from "react"
-import { Wallet, TrendingUp } from "lucide-react"
+import { Wallet, TrendingUp, TrendingDown } from "lucide-react"
 import "../css/Card.css"
 
 interface CardProps {
@@ -26,10 +25,13 @@ function Card({ cardTitle, cardBody, format = "currency", variant = "default", c
                 )}
                 <span className="asset-card__title">{cardTitle}</span>
             </div>
+
             <div className="asset-card__value-row">
                 <span className="asset-card__value">{formattedValue}</span>
                 {variant === "dark" && (
-                    <TrendingUp size={20} className="asset-card__trend-icon" />
+                    typeof change === "number" && change < 0
+                        ? <TrendingDown size={20} className="asset-card__trend-icon--down" />
+                        : <TrendingUp size={20} className="asset-card__trend-icon" />
                 )}
             </div>
             {variant === "highlight" && typeof change === "number" && (
