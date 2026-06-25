@@ -5,6 +5,10 @@
     background: #ffffff;
 }
 
+.asset-card--bordered {
+    border: 1.5px solid #000000; /* adjust to your design tokens */
+}
+
 .asset-card__header {
     display: flex;
     align-items: center;

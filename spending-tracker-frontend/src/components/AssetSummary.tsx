@@ -22,19 +22,20 @@ function AssetSummary({ totalAssets, totalAssetsChange, endOfDayBal, RobinHoodBa
         title: string,
         variant: "highlight" | "default" | "dark" = "default",
         format: "currency" | "percent" = "currency",
-        change?: number
+        change?: number,
+        border?: boolean
     ) => (
         isLoading ? placeHolder :
             <div className="col-12 col-lg-3 col-sm-6 mb-2 pe-2">
-                <Card cardBody={body} cardTitle={title} variant={variant} format={format} change={change} />
+                <Card cardBody={body} cardTitle={title} variant={variant} format={format} change={change} border={border} />
             </div>
     )
 
     return (
         <div className="row p-3 pb-0">
             {renderCard(totalAssets, "Total Assets", "highlight", "currency", totalAssetsChange)}
-            {renderCard(endOfDayBal, "End of Day Balance")}
-            {renderCard(RobinHoodBal, "Robin Hood")}
+            {renderCard(endOfDayBal, "End of Day Balance", "default", "currency", endOfDayBal, true)}
+            {renderCard(RobinHoodBal, "Robin Hood", "default", "currency", RobinHoodBal, true)}
             {renderCard(percentChange, "Percent Change", "dark", "percent")}
         </div>
     )
