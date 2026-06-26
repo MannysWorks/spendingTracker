@@ -1,0 +1,13 @@
+.page-link {
+    color: whitesmoke !important;
+    background-color: #1a6e1a !important;
+        font-family: playfair display, serif !important;
+
+    border: none !important;
+}
+
+.previous-btn, .next-btn {
+color: black !important;
+    background-color: #f1f8f1 !important;
+    border: none !important;
+}

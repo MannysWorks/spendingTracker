@@ -6,7 +6,7 @@
 }
 
 .asset-card--bordered {
-    border: 1.5px solid #000000; /* adjust to your design tokens */
+    border: 1.5px solid #166116; 
 }
 
 .asset-card__header {
@@ -31,6 +31,7 @@
 .asset-card__value {
     font-size: 1.5rem;
     font-weight: 700;
+    
     color: #1c1c1c;
 }
 
@@ -59,6 +60,8 @@
     margin-top: 0.5rem;
     font-size: 0.85rem;
     font-weight: 600;
+        font-family: playfair display, serif !important;
+
     color: #1a6e1a;
 }
 
