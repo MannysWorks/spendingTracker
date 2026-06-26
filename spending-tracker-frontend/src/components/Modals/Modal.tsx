@@ -61,10 +61,15 @@ function Modal({ onClose, onRefresh }: { onClose: () => void; onRefresh: () => v
 
     useEffect(() => {
         setIsLoading(true);
-        getEntries().then((entries) => {
-            setEntries(entries);
-            setIsLoading(false);
-        });
+        getEntries()
+            .then((entries) => {
+                setEntries(entries);
+                setIsLoading(false);
+            })
+            .catch((err) => {
+                console.error("Failed to load entries:", err);
+                setIsLoading(false);
+            });
     }, []);
 
     return <>

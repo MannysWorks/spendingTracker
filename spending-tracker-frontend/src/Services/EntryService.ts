@@ -38,11 +38,17 @@ export const getEntries = async (): Promise<Entry[]> => {
             'Authorization': `Bearer ${token}`
         }
     });
-     if (!response.ok) {
-        console.log("Status:", response.status)
-        
+
+    if (!response.ok) {
+        console.log("Status:", response.status);
+        return [];
     }
-    return response.json();
+
+    const text = await response.text();
+    if (!text) {
+        return [];
+    }
+    return JSON.parse(text);
 }
 
 export const postEntry = async (entry: Entry): Promise<Response> => {

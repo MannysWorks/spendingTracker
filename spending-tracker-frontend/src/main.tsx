@@ -10,6 +10,7 @@ import { NotFoundPage } from "./pages/NotfoundPage.tsx";
 import { AuthProvider } from "./Services/AuthProvider.tsx";
 import { ProtectedRoute } from "./Services/ProtectedRoute.tsx";
 import { Register } from "./pages/Register.tsx";
+import { GenericErrorPage } from "./pages/GenericErrorPage.tsx";
 
 // Handle navigation to login and register pages
 const handleRegisterClick = () => {
@@ -31,11 +32,11 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <App /> }
     ],
-    errorElement: <Login onRegisterClick={handleRegisterClick} />
+    errorElement: <GenericErrorPage />
   },
   { path: "/register", element: <Register onLoginClick={handleLoginClick} /> },
   { path: "/login", element: <Login onRegisterClick={handleRegisterClick} /> },
-  { path: "*", element: <NotFoundPage /> }
+  { path: "*", element: <GenericErrorPage /> }
 ]);
 
 createRoot(document.getElementById("root")!).render(

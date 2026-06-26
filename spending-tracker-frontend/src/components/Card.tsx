@@ -3,18 +3,18 @@ import "../css/Card.css"
 
 interface CardProps {
     cardTitle: string
-    cardBody: number
+    cardBody: number | undefined
     format?: "currency" | "percent"
     variant?: "highlight" | "default" | "dark"
-    change?: number // only used on the highlight card
+    change?: number
     border?: boolean
 }
-
 function Card({ cardTitle, cardBody, format = "currency", variant = "default", change, border = false }: CardProps) {
+    const safeValue = cardBody ?? 0;
     const formattedValue =
         format === "percent"
-            ? `${cardBody}%`
-            : `$${cardBody.toLocaleString()}`
+            ? `${safeValue}%`
+            : `$${safeValue.toLocaleString()}`
     return (
         <div className={`asset-card asset-card--${variant} ${border ? "asset-card--bordered" : ""}`}>
             <div className="asset-card__header">
