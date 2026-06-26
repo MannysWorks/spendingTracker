@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class spendingTracker {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long ID;
 
   @ManyToOne
