@@ -6,7 +6,6 @@ import 'bootstrap/dist/css/bootstrap.css'
 import { CursorTrail } from "./components/Cursor.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Login } from "./pages/Login.tsx";
-import { NotFoundPage } from "./pages/NotfoundPage.tsx";
 import { AuthProvider } from "./Services/AuthProvider.tsx";
 import { ProtectedRoute } from "./Services/ProtectedRoute.tsx";
 import { Register } from "./pages/Register.tsx";
