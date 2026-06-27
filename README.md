@@ -1,6 +1,7 @@
 # Spending Tracker
-
 Track my spending and net worth. I used to do this on a Google spreadsheet lol, so I built an app for it.
+
+🔗 **Live app:** [spendingtracker.mannys.works](https://spendingtracker.mannys.works)
 
 ## Tech Stack
 
@@ -23,6 +24,17 @@ Track my spending and net worth. I used to do this on a Google spreadsheet lol, 
 - Maven build system
 - JJWT (JSON Web Token library)
 - Lombok for boilerplate reduction
+
+- ## Deployment
+
+This app is deployed and live at **[spendingtracker.mannys.works](https://spendingtracker.mannys.works)**.
+
+- **Frontend:** Hosted on [Vercel](https://vercel.com), deployed from the `spending-tracker-frontend` directory
+- **Backend:** Containerized with Docker, hosted on [Render](https://render.com), available at `api.mannys.works` secured, but the code is all here anyways
+- **Database:** MySQL hosted on [Aiven](https://aiven.io)
+- **Domain:** `mannys.works`, registered and DNS-managed through Cloudflare
+
+> Note: the backend runs on Render's free tier, which spins down after ~15 minutes of inactivity. The first request after idle time may take 30-50 seconds while the container restarts.
 
 ## Project Structure
 
@@ -179,3 +191,6 @@ Then open your browser to `http://localhost:5173`
 
 This is a personal project, but if you want to suggest any improvements feel free to create a pull request! 
 If you want to use this as a base for your spending tracker feel free! :)
+
+## For future me 
+Kinda don't know how to feel, but I'd like to log it regardless this is your first real app lol, built imperfectly by you but that's what makes it fulfilling and yours, good job twin! - 6/26/2026
