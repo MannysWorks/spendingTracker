@@ -1,7 +1,7 @@
 import { type RegisterUserDto } from "../interfaces/RegisterUserDto";
 import { type LoginUserDto } from "../interfaces/LoginUserDto";
 
-const BASE_URL = 'http://localhost:8080/api/v1/spendingTracker/auth'
+const BASE_URL = 'https://api.mannys.works/api/v1/spendingTracker/auth'
 
 export const loginUser = async (data: LoginUserDto): Promise<Response> => {
     const response = await fetch(`${BASE_URL}/login`, {
