@@ -1,7 +1,5 @@
 {
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
-  ],
-
-  "_comment": "Anytime the user asks for any other route than / just serve the index.html page"
+  ]
 }
