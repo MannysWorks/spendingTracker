@@ -1,4 +1,4 @@
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "./useAuth"
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
