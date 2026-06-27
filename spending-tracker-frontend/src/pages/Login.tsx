@@ -18,7 +18,7 @@ export const Login = ({ onRegisterClick }: LoginProps) => {
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm<LoginUserDto>();
-    const [showModalForm, setShowModalForm] = useState(true);
+    const [showModalForm] = useState(true);
 
     // State to hold any login error messages
     const [loginError, setLoginError] = useState<string | null>(null);

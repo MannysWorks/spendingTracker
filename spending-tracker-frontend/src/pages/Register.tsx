@@ -12,7 +12,7 @@ export const Register = ({ onLoginClick }: { onLoginClick: () => void }) => {
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm<RegisterUserDto>();
-    const [showModalForm, setShowModalForm] = useState(true);
+    const [showModalForm] = useState(true);
 
     // State to hold any registration error messages
     const [registerError, setRegisterError] = useState<string | null>(null);
