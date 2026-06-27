@@ -43,7 +43,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             authorize ->
                 authorize
-                    .requestMatchers("/api/v1/spendingTracker/auth/**")
+                    .requestMatchers("/api/v1/spendingTracker/auth/**", "/health")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
