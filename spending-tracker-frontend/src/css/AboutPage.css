@@ -1,0 +1,145 @@
+/* ── Reset / root ── */
+.about-root {
+  min-height: 100vh;
+  background: #f7f9f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  padding: 2rem 1.25rem;
+}
+
+/* Subtle grid backdrop */
+.about-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(105, 255, 105, 0.166) 2px, transparent 1px),
+    linear-gradient(90deg, rgba(67, 255, 38, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+/* ── Main container ── */
+.about-main {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+/* ── Hero ── */
+.about-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.about-logo-mark {
+  margin-bottom: 0.25rem;
+}
+
+.about-eyebrow {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #1a6e1a;
+  margin: 0;
+}
+
+.about-headline {
+  font-size: clamp(2rem, 5vw, 2.9rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #111;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.about-headline-accent {
+  color: #1a6e1a;
+}
+
+.about-subhead {
+  font-size: 1.05rem;
+  color: #4a5a4a;
+  line-height: 1.65;
+  margin: 0;
+  max-width: 520px;
+}
+
+/* ── CTA button ── */
+.about-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.75rem 1.75rem;
+  background: #1a6e1a;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.97rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s;
+  box-shadow: 0 4px 16px rgba(26, 110, 26, 0.22);
+}
+
+.about-cta:hover {
+  background: #155515;
+}
+
+
+/* ── Footer note ── */
+.about-footer-note {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: #8a9a8a;
+  margin: 0;
+}
+
+.about-footer-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.about-footer-note a {
+  color: #1a6e1a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.about-footer-note a:hover {
+  text-decoration: underline;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .about-features {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
