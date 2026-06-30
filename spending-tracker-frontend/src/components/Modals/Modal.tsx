@@ -54,7 +54,7 @@ function Modal({ onClose, onRefresh }: { onClose: () => void; onRefresh: () => v
     }
     const [deletedEntryDate, setDeletedEntryDate] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const entriesPerPage = 1;
+    const entriesPerPage = 35;
     const indexOfLastEntry = currentPage * entriesPerPage;
     const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
     const currentEntries = entries.slice(indexOfFirstEntry, indexOfLastEntry);
