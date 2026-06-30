@@ -19,7 +19,7 @@ function App() {
       </div>
       <button
         className="btn btn-danger logout-btn "
-        onClick={() => { localStorage.removeItem("token"); window.location.href = "/"; }}
+        onClick={() => { localStorage.removeItem("token"); window.location.href = "/login"; }}
       >
         Logout
       </button>

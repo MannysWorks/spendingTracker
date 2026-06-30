@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import '../../css/ModalForm.css'
+import { parseISO } from "date-fns";
 
 interface props {
     onClose: () => void
@@ -99,7 +100,8 @@ function ModalForm({ onClose, entry }: props) {
                                         render={({ field }) => (
                                             <div className="form-floating">
                                                 <DatePicker
-                                                    selected={field.value ? new Date(field.value as string) : null}
+                                                    key={currentField.name}
+                                                    selected={field.value ? parseISO(field.value as string) : null}
                                                     // Probably a bad way to handle this, but it works. The date picker returns a Date object,
                                                     //  but the backend expects a string in YYYY-MM-DD format.
                                                     //  So on change, we convert the Date to the string format before passing it to react-hook-form.
