@@ -2,14 +2,31 @@
 #app-name, #welcome-message {
   color: #1a6e1a;
 }
-.login-page {
+.login-page{
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fafafa;
+  background-image:
+    linear-gradient(rgba(105, 255, 105, 0.166) 2px, transparent 1px),
+    linear-gradient(90deg, rgba(67, 255, 38, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
   padding: 24px;
 }
+
+/* Subtle grid backdrop */
+.about-grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(105, 255, 105, 0.166) 2px, transparent 1px),
+    linear-gradient(90deg, rgba(67, 255, 38, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
 
 .login-container {
   width: 100%;
@@ -67,7 +84,24 @@
 .field input::placeholder {
   color: #aaaaaa;
 }
+.about-footer-note {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: #8a9a8a;
+  margin: 0;
+}
 
+.about-footer-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
 .field input:focus {
   border-color: #1a6e1a;
   box-shadow: 0 0 0 3px rgba(26, 110, 26, 0.15);
