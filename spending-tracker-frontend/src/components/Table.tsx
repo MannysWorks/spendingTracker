@@ -19,6 +19,10 @@ function Table({ titles, entries, onEditClick, onDeleteClick, getFormDataEntry, 
       </div>
     </div>
   }
+
+  // reverse the entries so the most recent entry shows at the top
+  // const reversedEntries = [...entries].slice().reverse();
+
   return isLoading ? RenderPlaceHolder() : <>
     <div className="table-card">
       <table className="app-table">
@@ -30,6 +34,7 @@ function Table({ titles, entries, onEditClick, onDeleteClick, getFormDataEntry, 
           </tr>
         </thead>
         <tbody>
+
           {entries.map((entry, index) => {
             return <tr key={index}>
               {Object.values(entry).map((value, i, arr) => {

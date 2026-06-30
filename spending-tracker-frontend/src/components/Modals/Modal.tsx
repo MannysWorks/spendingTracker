@@ -11,6 +11,7 @@ import { deleteEntry, getEntries, handleResponse } from "../../Services/EntrySer
 
 function Modal({ onClose, onRefresh }: { onClose: () => void; onRefresh: () => void; }) {
     const [entries, setEntries] = useState<Entry[]>([]);
+    const [reversedEntries, setreversedEntries] = useState<Entry[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [preFilledFormData, setPreFilledFormData] = useState<Entry>();
     const [showToast, setShowToast] = useState(false);
@@ -57,13 +58,15 @@ function Modal({ onClose, onRefresh }: { onClose: () => void; onRefresh: () => v
     const entriesPerPage = 35;
     const indexOfLastEntry = currentPage * entriesPerPage;
     const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
-    const currentEntries = entries.slice(indexOfFirstEntry, indexOfLastEntry);
+    const currentEntries = reversedEntries.slice(indexOfFirstEntry, indexOfLastEntry);
+
 
     useEffect(() => {
         setIsLoading(true);
         getEntries()
             .then((entries) => {
                 setEntries(entries);
+                setreversedEntries([...entries].slice().reverse());
                 setIsLoading(false);
             })
             .catch((err) => {
