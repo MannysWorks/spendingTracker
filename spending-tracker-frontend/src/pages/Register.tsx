@@ -4,8 +4,7 @@ import { useState } from "react";
 import { registerUser } from "../Services/AuthenticateUserService";
 import "../css/Login.css";
 import { NavbarIcon } from "../assets/icons/Icons";
-import memeguy from "../assets/bitingLipMemeGuy.jpg"
-import { motion } from "framer-motion";
+
 
 export const Register = ({ onLoginClick }: { onLoginClick: () => void }) => {
     // Form register configuration

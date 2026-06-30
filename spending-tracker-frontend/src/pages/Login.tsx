@@ -6,8 +6,7 @@ import { loginUser } from "../Services/AuthenticateUserService";
 import { Alert } from "react-bootstrap";
 import "../css/Login.css";
 import { NavbarIcon } from "../assets/icons/Icons";
-import { motion } from "framer-motion";
-import memeguy from "../assets/bitingLipMemeGuy.jpg"
+
 
 
 interface LoginProps {
