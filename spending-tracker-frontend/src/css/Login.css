@@ -84,24 +84,9 @@
 .field input::placeholder {
   color: #aaaaaa;
 }
-.about-footer-note {
-  position: fixed;
-  bottom: 1.25rem;
-  right: 1.25rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.82rem;
-  color: #8a9a8a;
-  margin: 0;
-}
 
-.about-footer-img {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  object-fit: cover;
-}
+
+
 .field input:focus {
   border-color: #1a6e1a;
   box-shadow: 0 0 0 3px rgba(26, 110, 26, 0.15);
@@ -160,3 +145,4 @@
   font-size: 0.85rem;
   margin-bottom: 16px;
 }
+

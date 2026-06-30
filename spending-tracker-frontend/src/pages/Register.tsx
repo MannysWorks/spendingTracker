@@ -113,26 +113,12 @@ export const Register = ({ onLoginClick }: { onLoginClick: () => void }) => {
                                     Log in
                                 </button>
                             </p>
+
                         </form>
                     </div>
                 </div>
             )}
-            <motion.p
-                className="about-footer-note"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.55 }}
-            >
-                <img className="about-footer-img" src={memeguy}></img>
-                Check me out on the hub ·{" "}
-                <a
-                    href="https://github.com/MannysWorks"
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    MannysWorks
-                </a>
-            </motion.p>
+
         </>
     );
 };
