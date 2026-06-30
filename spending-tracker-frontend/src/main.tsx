@@ -10,6 +10,7 @@ import { AuthProvider } from "./Services/AuthProvider.tsx";
 import { ProtectedRoute } from "./Services/ProtectedRoute.tsx";
 import { Register } from "./pages/Register.tsx";
 import { GenericErrorPage } from "./pages/GenericErrorPage.tsx";
+import { AboutPage } from "./pages/AboutPage.tsx";
 
 // Handle navigation to login and register pages
 const handleRegisterClick = () => {
@@ -26,13 +27,14 @@ const isAuthenticated = !!localStorage.getItem("token");
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/home",
     element: <ProtectedRoute />,
     children: [
-      { path: "/", element: <App /> }
+      { path: "/home", element: <App /> }
     ],
     errorElement: <GenericErrorPage />
   },
+  { path: "/", element: <AboutPage /> },
   { path: "/register", element: <Register onLoginClick={handleLoginClick} /> },
   { path: "/login", element: <Login onRegisterClick={handleRegisterClick} /> },
   { path: "*", element: <GenericErrorPage /> }
