@@ -6,6 +6,17 @@
     align-items: center;
     background: transparent;
 }
+
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(105, 255, 105, 0.166) 2px, transparent 1px),
+    linear-gradient(90deg, rgba(67, 255, 38, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
 .logo-wrapper {
     position: absolute;
     top: 16px;

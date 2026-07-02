@@ -17,6 +17,8 @@ function App() {
       <div className="logo-wrapper">
         <NavbarIcon size={40} color="#1a6e1a" />
       </div>
+      {/* Background grid lines — purely decorative */}
+      <div className="grid-bg" aria-hidden="true" />
       <button
         className="btn btn-danger logout-btn "
         onClick={() => { localStorage.removeItem("token"); window.location.href = "/login"; }}
