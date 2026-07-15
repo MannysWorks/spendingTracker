@@ -53,8 +53,7 @@
 }
 
 @media(max-width: 550px) {
-    .bg {
-        background-image: none;
-        background-position: top;
+    .grid-bg {
+         height:100vh;
     }
 }
