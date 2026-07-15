@@ -3,7 +3,7 @@ import Modal from "./components/Modals/Modal";
 import { useState } from "react";
 import './css/App.css'
 import { AnimatePresence, motion } from "framer-motion";
-import { ExpandIcon, NavbarIcon } from "./assets/icons/Icons";
+import { NavbarIcon } from "./assets/icons/Icons";
 
 // Main app component that renders the navbar and the modal for the table view. 
 function App() {
