@@ -15,12 +15,13 @@ function App() {
     <>
 
       <div className="logo-wrapper">
-        <NavbarIcon size={40} color="#1a6e1a" />
+        <NavbarIcon size={40} color="#335237" />
       </div>
-      {/* Background grid lines — purely decorative */}
+
       <div className="grid-bg" aria-hidden="true" />
+
       <button
-        className="btn btn-danger logout-btn "
+        className="btn logout-btn "
         onClick={() => { localStorage.removeItem("token"); window.location.href = "/login"; }}
       >
         Logout
@@ -34,7 +35,7 @@ function App() {
             whileTap={{ scale: 0.95 }}
             className="btn rounded-15 mt-3 border-0"
             id="view-table-btn" onClick={() => setShowModal(true)}>
-            <ExpandIcon size={40} color="#1a6e1a" />
+            <img className="streamline-icon" src="Layer-Blur--Streamline-Sharp.png" alt=""></img>
           </motion.button>
           <AnimatePresence>
             {/* The modal for viewing the table */}

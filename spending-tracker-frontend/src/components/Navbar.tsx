@@ -28,8 +28,8 @@ function Navbar({ userName }: { userName: string }) {
                             Add 1 Streamline Icon: https://streamlinehq.com
                         </desc>
                         <g id="add-1--expand-cross-buttons-button-more-remove-plus-add-+-mathematics-math">
-                            <path id="Vector" stroke="#1a6e1a" stroke-linecap="round" stroke-linejoin="round" d="M17 1.2142857142857142v31.57142857142857" stroke-width="2.4286"></path>
-                            <path id="Vector_2" stroke="#1a6e1a" stroke-linecap="round" stroke-linejoin="round" d="M1.2142857142857142 16.902759999999997h31.57142857142857" stroke-width="2.4286"></path>
+                            <path id="Vector" stroke="#4F6B73" stroke-linecap="round" stroke-linejoin="round" d="M17 1.2142857142857142v31.57142857142857" stroke-width="2.4286"></path>
+                            <path id="Vector_2" stroke="#4F6B73" stroke-linecap="round" stroke-linejoin="round" d="M1.2142857142857142 16.902759999999997h31.57142857142857" stroke-width="2.4286"></path>
                         </g>
                     </svg>
                 </motion.button>

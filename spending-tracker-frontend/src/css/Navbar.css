@@ -1,7 +1,7 @@
 .navbar-title {
     font-family: playfair display, serif !important;
-    font-size: 35px !important;
-    color: green !important;
+    font-size: 30px !important;
+    color: #4F6B73 !important;
 }
 
 .add-entry {
@@ -27,7 +27,7 @@
     display: none;
     font-family: playfair display, serif !important;
     font-size: 20px !important;
-    color: green !important;
+    color:  #4F6B73 !important;
 }
 
 @media(max-width: 550px) {
@@ -38,6 +38,6 @@
         display: block;
         font-family: playfair display, serif !important;
         font-size: 20px !important;
-        color: green !important;
+        color: #4F6B73  !important;
     }
 }

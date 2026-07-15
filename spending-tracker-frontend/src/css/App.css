@@ -10,11 +10,10 @@
 .grid-bg {
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(105, 255, 105, 0.172) 4px, transparent 1px),
-    linear-gradient(90deg, rgba(67, 255, 38, 0.06)4px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none;
+  background-image: url('/src/assets/BlurryBckg.jpg'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .logo-wrapper {
@@ -30,8 +29,14 @@
     justify-content: center;
     align-items: center;
 }
-
+.streamline-icon {
+  /* This precise combination converts a black icon into #7E9A82 */
+  filter: brightness(0) saturate(100%) invert(64%) sepia(8%) saturate(1054%) hue-rotate(80deg) brightness(94%) contrast(85%);
+}
 .logout-btn {
+    background-color:#7E9A82 !important;
+    color: white !important;
+    border: none !important;
     position: absolute;
     right: 0;
     top: 16px; 
