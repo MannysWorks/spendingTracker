@@ -4,6 +4,7 @@ import { useState } from "react";
 import './css/App.css'
 import { AnimatePresence, motion } from "framer-motion";
 import { NavbarIcon } from "./assets/icons/Icons";
+import tableIcon from './assets/Table--Streamline-Sharp.png';
 
 // Main app component that renders the navbar and the modal for the table view. 
 function App() {
@@ -35,7 +36,7 @@ function App() {
             whileTap={{ scale: 0.95 }}
             className="btn rounded-15 mt-3 border-0"
             id="view-table-btn" onClick={() => setShowModal(true)}>
-            <img className="streamline-icon" src="src\assets\Table--Streamline-Sharp.png" alt=""></img>
+            <img className="streamline-icon" src={tableIcon} alt="View Table"></img>
           </motion.button>
           <AnimatePresence>
             {/* The modal for viewing the table */}
