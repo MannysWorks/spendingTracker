@@ -3,8 +3,10 @@ import "../css/Navbar.css"
 import ModalForm from "./Modals/ModalForm";
 import { AnimatePresence, motion } from "framer-motion";
 
-function Navbar({ userName }: { userName: string }) {
+function Navbar({ userName }: { userName?: string; }) {
     const [showModalForm, setShowModalForm] = useState(false);
+
+
 
     return (
         <nav className="navbar">
@@ -17,7 +19,7 @@ function Navbar({ userName }: { userName: string }) {
             </a>
 
             {/* Right side */}
-            <div className="ms-2">
+            <div className="add-entry-btn ms-2">
                 {/* Button to trigger the modal for adding entries */}
                 <motion.button
                     whileHover={{ scale: 1.5, rotate: 10 }}
