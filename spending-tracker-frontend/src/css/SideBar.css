@@ -28,8 +28,8 @@
 .sidebar-title {
   white-space: nowrap;
   font-weight: 600;
- font-family: playfair display, serif;
- color: #4F6B73; 
+ font-family: "playfair display", serif;
+ color: #C7D8DE; 
 }
 
 .sidebar-toggle {
@@ -159,6 +159,12 @@
     background: transparent;
     color: #1f2a22;
   }
+  .sidebar-title {
+  white-space: nowrap;
+  font-weight: 600;
+ font-family: "playfair display", serif;
+ color: #4F6B73; 
+}
 
   .sidebar-toggle {
     color: #1f2a22;
