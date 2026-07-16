@@ -35,7 +35,7 @@ function App() {
             whileTap={{ scale: 0.95 }}
             className="btn rounded-15 mt-3 border-0"
             id="view-table-btn" onClick={() => setShowModal(true)}>
-            <img className="streamline-icon" src="Table--Streamline-Sharp.png" alt=""></img>
+            <img className="streamline-icon" src="src\assets\Table--Streamline-Sharp.png" alt=""></img>
           </motion.button>
           <AnimatePresence>
             {/* The modal for viewing the table */}
