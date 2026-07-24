@@ -24,8 +24,9 @@ Track my spending and net worth. I used to do this on a Google spreadsheet lol, 
 - Maven build system
 - JJWT (JSON Web Token library)
 - Lombok for boilerplate reduction
+- JavaMail (email sending)
 
-- ## Deployment
+## Deployment
 
 This app is deployed and live at **[spendingtracker.mannys.works](https://spendingtracker.mannys.works)**.
 
@@ -46,12 +47,23 @@ This app is deployed and live at **[spendingtracker.mannys.works](https://spendi
 │   │   │   ├── java/com/tracker/SpendingTracker/
 │   │   │   │   ├── auth/          # JWT authentication logic
 │   │   │   │   ├── controllers/   # REST API endpoints
+│   │   │   │   │   ├── ResetPasswordController.java    # Password reset endpoints
+│   │   │   │   │   └── ...        # Other controllers
 │   │   │   │   ├── entities/      # JPA entity models
+│   │   │   │   ├── models/        # Data models
+│   │   │   │   │   ├── User.java
+│   │   │   │   │   ├── spendingTracker.java
+│   │   │   │   │   └── PasswordReset.java    # Password reset model
 │   │   │   │   ├── repositories/  # Data access layer
+│   │   │   │   │   ├── UserRepo.java
+│   │   │   │   │   ├── SpendingTrackerRepo.java
+│   │   │   │   │   └── PasswordResetRepo.java    # Password reset repository
 │   │   │   │   ├── services/      # Business logic
+│   │   │   │   │   ├── SpendingTrackerServices.java
+│   │   │   │   │   └── EmailSenderService.java    # Email sending service
 │   │   │   │   └── config/        # Spring security config
 │   │   │   └── resources/
-│   │   │       └── application.properties    # Database & JWT config
+│   │   │       └── application.properties    # Database, JWT, & Mail config
 │   │   └── test/                  # Unit tests
 │   ├── pom.xml                    # Maven dependencies
 │   └── mvnw / mvnw.cmd           # Maven wrapper
@@ -108,6 +120,14 @@ spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 security.jwt.secret-key=your_super_secret_jwt_key_here
 security.jwt.expiration-time=3600000
 
+# Email Configuration (for password reset & notifications)
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=your_email@gmail.com
+spring.mail.password=your_app_specific_password
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
@@ -120,6 +140,8 @@ export SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/spending_tracker
 export SPRING_DATASOURCE_USERNAME=your_db_user
 export SPRING_DATASOURCE_PASSWORD=your_db_password
 export JWT_SECRET_KEY=your_super_secret_jwt_key_here
+export SPRING_MAIL_USERNAME=your_email@gmail.com
+export SPRING_MAIL_PASSWORD=your_app_specific_password
 ```
 
 3. Create the MySQL database
@@ -183,9 +205,18 @@ Then open your browser to `http://localhost:5173`
 
 - User authentication with JWT tokens
 - Secure password handling with Spring Security
+- Password reset functionality with email verification
+- 6-digit reset code with 15-minute expiration
+- Email notifications for account recovery
 - Responsive React UI with modern component libraries
 - Real-time expense tracking and net worth calculations
 - MySQL database persistence with JPA/Hibernate ORM
+
+## API Endpoints
+
+### Password Reset
+- `POST /api/v1/spendingTracker/send-reset-code` - Send password reset code to email
+- `POST /api/v1/spendingTracker/reset` - Reset password with code and new password
 
 ## License
 
