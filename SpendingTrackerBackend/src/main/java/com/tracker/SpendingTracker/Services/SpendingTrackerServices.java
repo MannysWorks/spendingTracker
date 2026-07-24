@@ -26,6 +26,7 @@ import java.util.Optional;
 public class SpendingTrackerServices {
   private final SpendingTrackerRepo spendingTrackerRepo;
   private final UserRepo userRepo;
+  private final EmailSenderService emailSenderService;
 
   private static final Logger logger = LoggerFactory.getLogger(SpendingTrackerServices.class);
 
@@ -52,6 +53,10 @@ public class SpendingTrackerServices {
       dtoList.add(mapDTO.mapSpendingTrackerDto(s));
     }
     return dtoList;
+  }
+
+  public void forgotPassword() {
+    
   }
 
   public void addDailyTransaction(SpendingTrackerDTO dto) {
