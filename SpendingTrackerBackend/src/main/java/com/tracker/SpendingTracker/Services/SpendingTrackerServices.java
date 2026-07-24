@@ -2,21 +2,27 @@ package com.tracker.SpendingTracker.Services;
 
 import com.tracker.SpendingTracker.DTO.SpendingTrackerDTO;
 import com.tracker.SpendingTracker.DTOMapper.mapDTO;
+import com.tracker.SpendingTracker.Models.PasswordReset;
 import com.tracker.SpendingTracker.Models.User;
 import com.tracker.SpendingTracker.Models.spendingTracker;
+import com.tracker.SpendingTracker.Repo.PasswordResetRepo;
 import com.tracker.SpendingTracker.Repo.SpendingTrackerRepo;
 import com.tracker.SpendingTracker.Repo.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.security.SecureRandom;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +33,11 @@ public class SpendingTrackerServices {
   private final SpendingTrackerRepo spendingTrackerRepo;
   private final UserRepo userRepo;
   private final EmailSenderService emailSenderService;
+  private final PasswordResetRepo passwordResetRepo;
+  private final PasswordEncoder passwordEncoder;
 
   private static final Logger logger = LoggerFactory.getLogger(SpendingTrackerServices.class);
+  private static final SecureRandom random = new SecureRandom();
 
   // ===================== PUBLIC METHODS =====================
 
@@ -55,8 +64,66 @@ public class SpendingTrackerServices {
     return dtoList;
   }
 
-  public void forgotPassword() {
-    
+  public void sendEmailToChangePassword() {
+    User user = getCurrentUser();
+    String resetCode = generate6DigitCode();
+
+    PasswordReset reset = new PasswordReset();
+    reset.setUser(user);
+    reset.setCode(resetCode);
+    reset.setCreatedAt(LocalDateTime.now());
+    passwordResetRepo.save(reset);
+
+    String emailBody =
+        "<p>Here is your password reset code:</p>"
+            + "<h2>"
+            + resetCode
+            + "</h2>"
+            + "<p>This code expires in 15 minutes.</p>"
+            + "<p>If you didn't request this, ignore this email.</p>";
+
+    emailSenderService.sendEmail(user.getEmail(), "Reset Password Code", emailBody);
+  }
+
+  public String changePassword(String resetCode, String newPassword) {
+    User user = getCurrentUser();
+
+    try {
+      // Validate reset code exists and belongs to user
+      Optional<PasswordReset> resetOptional = passwordResetRepo.findByUserAndCode(user, resetCode);
+
+      if (resetOptional.isEmpty()) {
+        return "Invalid reset code";
+      }
+
+      PasswordReset reset = resetOptional.get();
+
+      // Check if code has expired (15 minutes)
+      long minutesElapsed = Duration.between(reset.getCreatedAt(), LocalDateTime.now()).toMinutes();
+      if (minutesElapsed >= 15) {
+        passwordResetRepo.deleteByUser(user);
+        return "Reset code has expired";
+      }
+
+      // Validate new password (basic check)
+      if (newPassword == null || newPassword.length() < 8) {
+        return "Password must be at least 8 characters";
+      }
+
+      // Update password
+      user.setPassword(passwordEncoder.encode(newPassword));
+      userRepo.save(user);
+
+      // Clean up reset code
+      passwordResetRepo.deleteByUser(user);
+
+      logger.info("Password successfully changed for user: {}", user.getUsername());
+      return "Password changed successfully";
+
+    } catch (Exception e) {
+      logger.error("Error changing password: ", e);
+      return "An error occurred while changing password";
+    }
   }
 
   public void addDailyTransaction(SpendingTrackerDTO dto) {
@@ -252,6 +319,12 @@ public class SpendingTrackerServices {
     return userRepo
         .findByUsername(userName)
         .orElseThrow(() -> new UsernameNotFoundException("This user doesn't seem to exist!"));
+  }
+
+  /** Generates a random 6-digit code (000000 - 999999) */
+  public static String generate6DigitCode() {
+    int code = random.nextInt(1000000);
+    return String.format("%06d", code);
   }
 
   private void calculateAllTransactionsAfterSpecificEntry(
