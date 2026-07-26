@@ -4,6 +4,7 @@ import { useState } from "react";
 import './css/App.css'
 import { AnimatePresence } from "framer-motion";
 import Navbar from "./components/Navbar";
+
 function App() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [refreshKey, setRefreshKey] = useState<number>(0);
