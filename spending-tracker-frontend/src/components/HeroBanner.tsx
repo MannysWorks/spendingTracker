@@ -1,49 +1,209 @@
 import { useState } from "react";
-import "../css/HeroBanner.css"
+import "../css/HeroBanner.css";
 import ModalForm from "./Modals/ModalForm";
 import { AnimatePresence, motion } from "framer-motion";
 
-function HeroBanner({ userName }: { userName?: string; }) {
+type HeroBannerProps = {
+    userName?: string;
+    totalBalance?: number;
+    percentageChange?: number;
+};
+
+type CategoryCard = {
+    name: string;
+    amount: number;
+    className: string;
+};
+
+function HeroBanner({
+    userName = "Manny",
+    totalBalance = 0,
+    percentageChange = 0,
+}: HeroBannerProps) {
     const [showModalForm, setShowModalForm] = useState(false);
+    const [showBalance, setShowBalance] = useState(true);
 
+    const categories: CategoryCard[] = [
+        {
+            name: "Food & Drinks",
+            amount: 843.24,
+            className: "wallet-card--food",
+        },
+        {
+            name: "Transportation",
+            amount: 512.38,
+            className: "wallet-card--transportation",
+        },
+        {
+            name: "Shopping",
+            amount: 1283.76,
+            className: "wallet-card--shopping",
+        },
+    ];
 
+    const formatCurrency = (amount: number) =>
+        new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+        }).format(amount);
+
+    const isPositive = percentageChange >= 0;
 
     return (
-        <nav className="navbar">
-            {/* Left side */}
-            <a className="navbar-brand navbar-title m-0" href="#">
-                {userName}'s Spending Tracker
-            </a>
-            <a className="navbar-brand navbar-title-display-small-screens m-0" href="#">
-                {userName}, Start traking!
-            </a>
+        <>
+            <section className="hero-banner" aria-labelledby="wallet-heading">
+                <div className="wallet-shell">
+                    <div className="wallet-cards" aria-label="Spending categories">
+                        {categories.map((category) => (
+                            <div
+                                className={`wallet-card ${category.className}`}
+                                key={category.name}
+                            >
+                                <span className="wallet-card__name">{category.name}</span>
 
-            {/* Right side */}
-            <div className="add-entry-btn ms-2">
-                {/* Button to trigger the modal for adding entries */}
-                <motion.button
-                    whileHover={{ scale: 1.5, rotate: 10 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="add-entry" onClick={() => setShowModalForm(true)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 34 34" id="Add-1--Streamline-Core" height="30" width="30">
-                        <desc>
-                            Add 1 Streamline Icon: https://streamlinehq.com
-                        </desc>
-                        <g id="add-1--expand-cross-buttons-button-more-remove-plus-add-+-mathematics-math">
-                            <path id="Vector" stroke="#4F6B73" stroke-linecap="round" stroke-linejoin="round" d="M17 1.2142857142857142v31.57142857142857" stroke-width="2.4286"></path>
-                            <path id="Vector_2" stroke="#4F6B73" stroke-linecap="round" stroke-linejoin="round" d="M1.2142857142857142 16.902759999999997h31.57142857142857" stroke-width="2.4286"></path>
-                        </g>
-                    </svg>
-                </motion.button>
-                <AnimatePresence>
-                    {/* The modal for adding entries */}
-                    {showModalForm && (
-                        <ModalForm key="modal-form" onClose={() => setShowModalForm(false)} />
-                    )}
-                </AnimatePresence>
-            </div>
-        </nav>
-    )
+                                <span className="wallet-card__amount">
+                                    {formatCurrency(category.amount)}
+                                </span>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="wallet-pocket">
+                        <div className="wallet-stitching" aria-hidden="true" />
+
+                        <div className="wallet-pocket__content">
+                            <div className="wallet-balance">
+                                <div className="wallet-balance__row">
+                                    <span className="wallet-balance__amount">
+                                        {showBalance
+                                            ? formatCurrency(totalBalance)
+                                            : "•••••••"}
+                                    </span>
+
+                                    <button
+                                        type="button"
+                                        className="balance-toggle"
+                                        onClick={() => setShowBalance((current) => !current)}
+                                        aria-label={
+                                            showBalance
+                                                ? "Hide total balance"
+                                                : "Show total balance"
+                                        }
+                                    >
+                                        {showBalance ? (
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                aria-hidden="true"
+                                                width="25"
+                                                height="25"
+                                            >
+                                                <path
+                                                    d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="1.8"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+
+                                                <circle
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="2.8"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="1.8"
+                                                />
+                                            </svg>
+                                        ) : (
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                aria-hidden="true"
+                                                width="25"
+                                                height="25"
+                                            >
+                                                <path
+                                                    d="m3 3 18 18"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="1.8"
+                                                    strokeLinecap="round"
+                                                />
+
+                                                <path
+                                                    d="M10.6 6.2A10.4 10.4 0 0 1 12 6c6 0 9.5 6 9.5 6a15 15 0 0 1-2.3 3"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="1.8"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+
+                                                <path
+                                                    d="M6.3 7.2C3.9 9 2.5 12 2.5 12s3.5 6 9.5 6c1.2 0 2.3-.2 3.3-.6"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    strokeWidth="1.8"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                        )}
+                                    </button>
+                                </div>
+
+                                <div className="wallet-change">
+                                    <span
+                                        className={`wallet-change__badge ${isPositive
+                                            ? "wallet-change__badge--positive"
+                                            : "wallet-change__badge--negative"
+                                            }`}
+                                    >
+                                        {isPositive ? "+" : ""}
+                                        {percentageChange.toFixed(2)}%
+                                    </span>
+
+                                    <span className="wallet-change__label">last day</span>
+                                </div>
+                            </div>
+
+                            <motion.button
+                                type="button"
+                                className="add-entry-button"
+                                whileHover={{
+                                    scale: 1.07,
+                                    rotate: 3,
+                                    y: -4,
+                                }}
+                                whileTap={{
+                                    scale: 0.94,
+                                    rotate: -2,
+                                    y: 1,
+                                }}
+                                onClick={() => setShowModalForm(true)}
+                                aria-label="Add a new spending entry"
+                            >
+                                <img
+                                    src="src\assets\add-entry-wood-button.webp"
+                                    alt=""
+                                    draggable={false}
+                                />
+                            </motion.button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <AnimatePresence>
+                {showModalForm && (
+                    <ModalForm
+                        key="modal-form"
+                        onClose={() => setShowModalForm(false)}
+                    />
+                )}
+            </AnimatePresence>
+        </>
+    );
 }
 
 export default HeroBanner;
