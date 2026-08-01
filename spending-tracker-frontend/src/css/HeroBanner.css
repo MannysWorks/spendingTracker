@@ -1,0 +1,43 @@
+.navbar-title {
+    font-family: playfair display, serif !important;
+    font-size: 30px !important;
+    color: #4F6B73 !important;
+}
+
+.add-entry {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+.add-entry-btn-wrapper {
+    position: relative;
+    width: 112px;
+    height: 35px;
+}
+
+.add-entry-btn-img {
+    width: 110px;
+    top: 0;
+    left: 0;
+}
+
+.navbar-title-display-small-screens {
+    display: none;
+    font-family: playfair display, serif !important;
+    font-size: 20px !important;
+    color:  #4F6B73 !important;
+}
+
+@media(max-width: 550px) {
+    .navbar-title{
+        display: none;
+    }
+    .navbar-title-display-small-screens {
+        display: block;
+        font-family: playfair display, serif !important;
+        font-size: 20px !important;
+        color: #4F6B73  !important;
+    }
+}
