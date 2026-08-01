@@ -1,210 +1,481 @@
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: #f7f6f2;
 }
 
 body {
-    margin: 0;
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  color: #15171a;
+  background: #f7f6f2;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
 }
 
 .app-shell {
-    min-height: 100vh;
-    background: #f7f6f2;
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(255, 255, 255, 0.95),
+      transparent 44%
+    ),
+    #f7f6f2;
 }
+
+/* Header */
 
 .app-header {
-    position: relative;
-    z-index: 100;
-
-    width: 100%;
-    padding: 22px 38px 8px;
-
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: start;
-
-    background: transparent;
-    border: none;
+  position: relative;
+  z-index: 100;
+  width: 100%;
+  padding: 22px 32px 10px;
 }
 
-/* Slimmer title */
+.app-header-inner {
+  width: min(100%, 1440px);
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) auto minmax(180px, 1fr);
+  align-items: center;
+  gap: 24px;
+}
+
+/* Brand */
 
 .app-brand {
-    justify-self: start;
+  justify-self: start;
 
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
 
-    font-size: 17px;
-    font-weight: 700;
-    line-height: 1.05;
-    letter-spacing: -0.25px;
+  color: inherit;
+  text-decoration: none;
+
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.3px;
 }
 
 .app-brand-name {
-    color: #006b35;
+  color: #006b35;
 }
 
 .app-brand-subtitle {
-    color: #080808;
+  color: #101214;
 }
 
-/* Floating navbar only */
+/* Center navigation */
 
 .app-navbar-container {
-    justify-self: center;
+  justify-self: center;
+  min-width: 0;
 }
 
-/* Right-side actions */
+/* Header actions */
 
 .app-header-actions {
-    justify-self: end;
+  justify-self: end;
 
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .notification-button {
-    position: relative;
+  position: relative;
 
-    width: 42px;
-    height: 42px;
+  width: 42px;
+  height: 42px;
 
-    display: grid;
-    place-items: center;
+  display: grid;
+  place-items: center;
 
-    padding: 0;
+  padding: 0;
 
-    border: 1px solid #ecece8;
-    border-radius: 50%;
-    background: #ffffff;
+  color: #111111;
+  background: rgba(255, 255, 255, 0.9);
 
-    color: #111111;
-    cursor: pointer;
+  border: 1px solid #ebece8;
+  border-radius: 50%;
 
-    box-shadow: 0 4px 12px rgba(25, 35, 30, 0.05);
+  cursor: pointer;
+
+  box-shadow:
+    0 5px 14px rgba(25, 35, 30, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
 }
 
 .notification-button:hover {
-    background: #fafafa;
+  background: #ffffff;
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 8px 18px rgba(25, 35, 30, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.notification-button:active {
+  transform: translateY(0);
 }
 
 .notification-indicator {
-    position: absolute;
-    top: 8px;
-    right: 8px;
+  position: absolute;
+  top: 7px;
+  right: 7px;
 
-    width: 7px;
-    height: 7px;
+  width: 8px;
+  height: 8px;
 
-    background: #008f4c;
-    border: 2px solid #ffffff;
-    border-radius: 50%;
+  background: #008f4c;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
 }
 
 .logout-button {
-    min-width: 92px;
-    height: 42px;
-    padding: 0 20px;
+  min-width: 96px;
+  height: 42px;
+  padding: 0 22px;
 
-    border: none;
-    border-radius: 999px;
-    background: #006b35;
+  color: #ffffff;
+  background: #006b35;
 
-    color: #ffffff;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
+  border: 0;
+  border-radius: 999px;
 
-    cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
 
-    box-shadow: 0 5px 14px rgba(0, 107, 53, 0.15);
+  cursor: pointer;
+
+  box-shadow: 0 7px 18px rgba(0, 107, 53, 0.16);
+
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
 }
 
 .logout-button:hover {
-    background: #00582c;
+  background: #00582c;
+  transform: translateY(-1px);
+
+  box-shadow: 0 9px 22px rgba(0, 107, 53, 0.21);
 }
 
-/* Main content now begins closer to header */
-
-.bg {
-    min-height: calc(100vh - 72px);
+.logout-button:active {
+  transform: translateY(0);
 }
 
-.hero-wrapper {
-    width: 100%;
+.notification-button:focus-visible,
+.logout-button:focus-visible,
+.app-brand:focus-visible {
+  outline: 3px solid rgba(0, 107, 53, 0.28);
+  outline-offset: 3px;
 }
+
+/* Main dashboard */
+
+.app-content {
+  width: min(100% - 64px, 1380px);
+  margin: 0 auto;
+  padding: 30px 0 70px;
+}
+
+.dashboard-heading {
+  margin: 0 0 30px;
+}
+
+.dashboard-heading h1 {
+  margin: 0;
+
+  color: #15171a;
+
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  font-weight: 680;
+  line-height: 1.1;
+  letter-spacing: -0.045em;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(520px, 0.95fr)
+    minmax(520px, 1.05fr);
+
+  align-items: start;
+  gap: clamp(28px, 4vw, 56px);
+}
+
+/* Wallet positioning */
+
+.wallet-column {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+/*
+  HeroBanner already controls the wallet width.
+  This removes excess internal page spacing from that component.
+*/
+.wallet-column .hero-banner {
+  width: 100%;
+  max-width: 690px;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+  App owns the welcome heading now,
+  so hide the duplicate heading inside HeroBanner.
+*/
+.wallet-column .hero-banner__heading {
+  display: none;
+}
+
+/*
+  The cards rise above the wallet shell,
+  so provide space above the wallet inside the column.
+*/
+.wallet-column .wallet-shell {
+  margin-top: 54px;
+}
+
+/* Analytics panel placeholder */
+
+.analytics-column {
+  min-width: 0;
+}
+
+.analytics-placeholder {
+  min-height: 420px;
+  padding: 34px;
+
+  display: grid;
+  place-items: center;
+
+  color: #727782;
+  background: rgba(255, 255, 255, 0.82);
+
+  border: 1px solid rgba(229, 231, 226, 0.92);
+  border-radius: 28px;
+
+  box-shadow:
+    0 18px 45px rgba(31, 43, 38, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+/* Medium desktops */
+
+@media (max-width: 1180px) {
+  .app-header-inner {
+    grid-template-columns: minmax(150px, 1fr) auto minmax(150px, 1fr);
+  }
+
+  .app-content {
+    width: min(100% - 44px, 1120px);
+  }
+
+  .dashboard-grid {
+    grid-template-columns:
+      minmax(460px, 1fr)
+      minmax(430px, 1fr);
+
+    gap: 28px;
+  }
+
+  .wallet-column .hero-banner {
+    max-width: 620px;
+  }
+}
+
 /* Tablet */
 
-@media (max-width: 900px) {
-    .app-header {
-        padding: 16px 22px;
-    }
+@media (max-width: 960px) {
+  .app-header {
+    padding: 18px 22px 8px;
+  }
 
-    .logout-button {
-        min-width: 88px;
-        padding-inline: 18px;
-    }
+  .app-header-inner {
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "brand actions"
+      "navbar navbar";
+
+    gap: 18px;
+  }
+
+  .app-brand {
+    grid-area: brand;
+  }
+
+  .app-navbar-container {
+    grid-area: navbar;
+    justify-self: center;
+  }
+
+  .app-header-actions {
+    grid-area: actions;
+  }
+
+  .app-content {
+    width: min(100% - 36px, 760px);
+    padding-top: 28px;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .wallet-column,
+  .analytics-column {
+    width: 100%;
+  }
+
+  .wallet-column {
+    justify-content: center;
+  }
+
+  .wallet-column .hero-banner {
+    max-width: 700px;
+  }
+
+  .analytics-placeholder {
+    min-height: 360px;
+  }
 }
 
 /* Mobile */
 
 @media (max-width: 700px) {
-    .app-header {
-        grid-template-columns: 1fr auto;
-        grid-template-areas:
-            "brand actions"
-            "navbar navbar";
+  .app-header {
+    padding: 16px 16px 6px;
+  }
 
-        gap: 16px;
+  .app-header-inner {
+    gap: 16px;
+  }
 
-        min-height: auto;
-        padding: 18px 16px;
-    }
+  .app-brand {
+    font-size: 16px;
+  }
 
-    .app-brand {
-        grid-area: brand;
-    }
+  .app-navbar-container {
+    width: 100%;
+  }
 
-    .app-navbar-container {
-        grid-area: navbar;
+  .app-header-actions {
+    gap: 8px;
+  }
 
-        justify-self: stretch;
-        width: 100%;
-    }
+  .notification-button {
+    width: 40px;
+    height: 40px;
+  }
 
-    .app-header-actions {
-        grid-area: actions;
-    }
+  .logout-button {
+    min-width: auto;
+    height: 40px;
+    padding: 0 16px;
+  }
 
-    .notification-button {
-        width: 42px;
-        height: 42px;
-    }
+  .app-content {
+    width: min(100% - 24px, 620px);
+    padding-top: 24px;
+    padding-bottom: 48px;
+  }
 
-    .logout-button {
-        min-width: auto;
-        height: 42px;
-        padding: 0 17px;
-    }
+  .dashboard-heading {
+    margin-bottom: 22px;
+  }
 
-    .bg {
-        min-height: auto;
-    }
+  .dashboard-heading h1 {
+    font-size: clamp(1.75rem, 8vw, 2.2rem);
+  }
+
+  .wallet-column .wallet-shell {
+    margin-top: 46px;
+  }
 }
 
+/* Small phones */
+
 @media (max-width: 430px) {
-    .app-brand {
-        font-size: 17px;
-    }
+  .app-header {
+    padding-inline: 12px;
+  }
 
-    .app-header-actions {
-        gap: 8px;
-    }
+  .app-brand {
+    font-size: 15px;
+  }
 
-    .logout-button {
-        padding-inline: 14px;
-        font-size: 13px;
-    }
+  .app-header-actions {
+    gap: 7px;
+  }
+
+  .notification-button {
+    width: 38px;
+    height: 38px;
+  }
+
+  .logout-button {
+    height: 38px;
+    padding-inline: 13px;
+    font-size: 12px;
+  }
+
+  .app-content {
+    width: calc(100% - 18px);
+  }
+
+  .dashboard-heading h1 {
+    font-size: 1.7rem;
+  }
+
+  .wallet-column .wallet-shell {
+    margin-top: 42px;
+  }
+
+  .analytics-placeholder {
+    min-height: 300px;
+    padding: 24px;
+    border-radius: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notification-button,
+  .logout-button {
+    transition: none;
+  }
 }
