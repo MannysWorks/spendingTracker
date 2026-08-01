@@ -2,7 +2,7 @@ import { useState } from "react";
 import "../css/HeroBanner.css";
 import ModalForm from "./Modals/ModalForm";
 import { AnimatePresence, motion } from "framer-motion";
-
+import buttonAddIcon from "../assets/add-entry-wood-button.webp";
 type HeroBannerProps = {
     userName?: string;
     totalBalance?: number;
@@ -21,7 +21,7 @@ function HeroBanner({
 }: HeroBannerProps) {
     const [showModalForm, setShowModalForm] = useState(false);
     const [showBalance, setShowBalance] = useState(true);
-
+    //TODO: change the default values of totalBalance and percentageChange to 0 if they are not provided as props soon
     const categories: CategoryCard[] = [
         {
             name: "Food & Drinks",
@@ -183,7 +183,7 @@ function HeroBanner({
                                 aria-label="Add a new spending entry"
                             >
                                 <img
-                                    src="src\assets\add-entry-wood-button.webp"
+                                    src={buttonAddIcon}
                                     alt=""
                                     draggable={false}
                                 />
