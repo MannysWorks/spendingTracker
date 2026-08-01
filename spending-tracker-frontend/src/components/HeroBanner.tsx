@@ -16,7 +16,6 @@ type CategoryCard = {
 };
 
 function HeroBanner({
-    userName = "Manny",
     totalBalance = 0,
     percentageChange = 0,
 }: HeroBannerProps) {
