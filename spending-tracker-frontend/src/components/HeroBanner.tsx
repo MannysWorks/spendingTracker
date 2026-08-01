@@ -1,8 +1,13 @@
 import { useState } from "react";
 import "../css/HeroBanner.css";
 import ModalForm from "./Modals/ModalForm";
-import { AnimatePresence, motion } from "framer-motion";
+import {
+    AnimatePresence,
+    motion,
+    type Variants,
+} from "framer-motion";
 import buttonAddIcon from "../assets/add-entry-wood-button.webp";
+
 type HeroBannerProps = {
     userName?: string;
     totalBalance?: number;
@@ -15,13 +20,30 @@ type CategoryCard = {
     className: string;
 };
 
+const cardVariants: Variants = {
+    hidden: {
+        y: 95,
+        opacity: 0,
+    },
+    visible: (index: number) => ({
+        y: 0,
+        opacity: 1,
+        transition: {
+            delay: 0.25 + index * 0.25,
+            duration: 0.65,
+            ease: [0.22, 1, 0.36, 1],
+        },
+    }),
+};
+
 function HeroBanner({
     totalBalance = 0,
     percentageChange = 0,
 }: HeroBannerProps) {
     const [showModalForm, setShowModalForm] = useState(false);
     const [showBalance, setShowBalance] = useState(true);
-    //TODO: change the default values of totalBalance and percentageChange to 0 if they are not provided as props soon
+
+    // TODO: Replace these mocked category totals with API data.
     const categories: CategoryCard[] = [
         {
             name: "Food & Drinks",
@@ -40,7 +62,7 @@ function HeroBanner({
         },
     ];
 
-    const formatCurrency = (amount: number) =>
+    const formatCurrency = (amount: number): string =>
         new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: "USD",
@@ -50,25 +72,37 @@ function HeroBanner({
 
     return (
         <>
-            <section className="hero-banner" aria-labelledby="wallet-heading">
+            <section className="hero-banner" aria-label="Spending wallet summary">
                 <div className="wallet-shell">
-                    <div className="wallet-cards" aria-label="Spending categories">
-                        {categories.map((category) => (
-                            <div
+                    <div
+                        className="wallet-cards"
+                        aria-label="Spending categories"
+                    >
+                        {categories.map((category, index) => (
+                            <motion.div
                                 className={`wallet-card ${category.className}`}
                                 key={category.name}
+                                custom={index}
+                                variants={cardVariants}
+                                initial="hidden"
+                                animate="visible"
                             >
-                                <span className="wallet-card__name">{category.name}</span>
+                                <span className="wallet-card__name">
+                                    {category.name}
+                                </span>
 
                                 <span className="wallet-card__amount">
                                     {formatCurrency(category.amount)}
                                 </span>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
 
                     <div className="wallet-pocket">
-                        <div className="wallet-stitching" aria-hidden="true" />
+                        <div
+                            className="wallet-stitching"
+                            aria-hidden="true"
+                        />
 
                         <div className="wallet-pocket__content">
                             <div className="wallet-balance">
@@ -82,7 +116,11 @@ function HeroBanner({
                                     <button
                                         type="button"
                                         className="balance-toggle"
-                                        onClick={() => setShowBalance((current) => !current)}
+                                        onClick={() =>
+                                            setShowBalance(
+                                                (current) => !current,
+                                            )
+                                        }
                                         aria-label={
                                             showBalance
                                                 ? "Hide total balance"
@@ -154,21 +192,38 @@ function HeroBanner({
                                 <div className="wallet-change">
                                     <span
                                         className={`wallet-change__badge ${isPositive
-                                            ? "wallet-change__badge--positive"
-                                            : "wallet-change__badge--negative"
+                                                ? "wallet-change__badge--positive"
+                                                : "wallet-change__badge--negative"
                                             }`}
                                     >
                                         {isPositive ? "+" : ""}
                                         {percentageChange.toFixed(2)}%
                                     </span>
 
-                                    <span className="wallet-change__label">last day</span>
+                                    <span className="wallet-change__label">
+                                        last day
+                                    </span>
                                 </div>
                             </div>
 
                             <motion.button
                                 type="button"
                                 className="add-entry-button"
+                                initial={{
+                                    opacity: 0,
+                                    scale: 0.8,
+                                    rotate: -8,
+                                }}
+                                animate={{
+                                    opacity: 1,
+                                    scale: 1,
+                                    rotate: 0,
+                                    transition: {
+                                        delay: 1.05,
+                                        duration: 0.5,
+                                        ease: [0.22, 1, 0.36, 1],
+                                    },
+                                }}
                                 whileHover={{
                                     scale: 1.07,
                                     rotate: 3,
