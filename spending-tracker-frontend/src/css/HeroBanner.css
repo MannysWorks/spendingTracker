@@ -7,19 +7,19 @@
   --positive: #32d58b;
   --negative: #ff6b6b;
 
-  width: min(100%, 760px);
-  margin: 0 auto;
-  padding: 0 18px 42px;
+  width: min(100%, 620px);
+  margin: 0;
+  padding: 0 12px 30px;
 }
 
 .hero-banner__heading {
-  margin-bottom: 62px;
+  margin-bottom: 50px;
 }
 
 .hero-banner__eyebrow {
   margin: 0 0 5px;
   color: #777d87;
-  font-size: 0.88rem;
+  font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
@@ -27,7 +27,7 @@
 .hero-banner__heading h1 {
   margin: 0;
   color: #17191d;
-  font-size: clamp(1.8rem, 4vw, 2.75rem);
+  font-size: clamp(1.55rem, 3.25vw, 2.25rem);
   font-weight: 650;
   letter-spacing: -0.04em;
 }
@@ -35,34 +35,33 @@
 /*
   Main wallet positioning container.
 
-  This is intentionally transparent.
-  The previous blue background caused the side edges
-  to stick out beside the navy pocket.
+  The shell remains transparent so the blue backing does not
+  protrude around the lower navy pocket.
 */
 .wallet-shell {
   position: relative;
   width: 100%;
-  height: 420px;
+  height: 345px;
   background: transparent;
   isolation: isolate;
 }
 
 /*
-  Blue rear sleeve only exists behind the inserted cards.
+  Blue rear sleeve behind the inserted category cards.
 
-  It stops near the pocket opening rather than continuing
-  down both sides of the wallet.
+  It ends near the pocket opening, keeping the lower left and
+  right edges straight and aligned with the main wallet.
 */
 .wallet-shell::before {
   content: "";
   position: absolute;
-  top: 4px;
+  top: 3px;
   left: 0;
   right: 0;
-  height: 155px;
+  height: 125px;
   z-index: 0;
 
-  border-radius: 36px 36px 20px 20px;
+  border-radius: 29px 29px 16px 16px;
 
   background:
     linear-gradient(
@@ -72,7 +71,7 @@
     );
 
   box-shadow:
-    0 10px 24px rgba(14, 52, 111, 0.14);
+    0 8px 20px rgba(14, 52, 111, 0.13);
 }
 
 /* Category cards */
@@ -86,25 +85,25 @@
 
 .wallet-card {
   position: absolute;
-  left: 32px;
-  right: 32px;
-  height: 86px;
+  left: 26px;
+  right: 26px;
+  height: 70px;
 
-  padding: 19px 28px;
+  padding: 15px 22px;
 
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 20px;
+  gap: 16px;
 
   box-sizing: border-box;
 
-  border-radius: 28px 28px 8px 8px;
+  border-radius: 23px 23px 7px 7px;
 
   font-family: Inter, Arial, sans-serif;
 
   box-shadow:
-    0 -7px 18px rgba(10, 20, 42, 0.08);
+    0 -5px 15px rgba(10, 20, 42, 0.07);
 }
 
 .wallet-card__name,
@@ -112,7 +111,7 @@
   position: relative;
   z-index: 1;
 
-  font-size: clamp(0.92rem, 2vw, 1.08rem);
+  font-size: clamp(0.78rem, 1.65vw, 0.9rem);
   line-height: 1;
   white-space: nowrap;
 }
@@ -126,7 +125,7 @@
 }
 
 .wallet-card--food {
-  top: -52px;
+  top: -42px;
   z-index: 1;
 
   color: #ffffff;
@@ -141,7 +140,7 @@
 }
 
 .wallet-card--transportation {
-  top: -2px;
+  top: -1px;
   z-index: 2;
 
   color: #111820;
@@ -156,7 +155,7 @@
 }
 
 .wallet-card--shopping {
-  top: 48px;
+  top: 39px;
   z-index: 3;
 
   color: #121625;
@@ -173,9 +172,8 @@
 /*
   Main navy wallet pocket.
 
-  It now uses the full wallet width.
-  There is no larger blue rounded rectangle behind it,
-  so the left and right sides stay straight and aligned, this was too hard to fucking
+  It spans the full width, so the sides remain straight and
+  no blue shell bulges outward around it.
 */
 .wallet-pocket {
   position: absolute;
@@ -183,12 +181,13 @@
   right: 0;
   bottom: 0;
 
-  height: 306px;
+  height: 250px;
 
   z-index: 4;
   overflow: hidden;
 
-  border-radius: 36px;
+  border: 3px solid var(--wallet-blue);
+  border-radius: 29px;
 
   background:
     radial-gradient(
@@ -202,26 +201,19 @@
       var(--pocket-navy-dark) 100%
     );
 
-  border: 4px solid var(--wallet-blue);
-
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    inset 0 -12px 24px rgba(0, 14, 39, 0.16),
-    0 18px 32px rgba(3, 28, 69, 0.2);
+    inset 0 -10px 20px rgba(0, 14, 39, 0.16),
+    0 15px 27px rgba(3, 28, 69, 0.19);
 }
 
-/*
-  The stitching follows the navy pocket,
-  not an outer shell. Talk about stupid design decisions. The dashed border is a separate element
-*/
 .wallet-stitching {
   position: absolute;
-  inset: 12px;
-
+  inset: 10px;
   z-index: 1;
 
   border: 2px dashed var(--stitch-blue);
-  border-radius: 27px;
+  border-radius: 22px;
 
   pointer-events: none;
   opacity: 0.95;
@@ -232,43 +224,42 @@
   z-index: 2;
 
   height: 100%;
-
-  padding: 60px 66px 46px 58px;
+  padding: 44px 48px 34px 44px;
 
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 28px;
+  gap: 22px;
 
   box-sizing: border-box;
 }
 
 .wallet-balance {
   min-width: 0;
-  padding-top: 6px;
+  padding-top: 5px;
 }
 
 .wallet-balance__row {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 11px;
 }
 
 .wallet-balance__amount {
   color: #ffffff;
 
   font-family: "DM Serif Display", Georgia, serif;
-  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-size: clamp(2rem, 4.7vw, 3.15rem);
   line-height: 1;
   letter-spacing: -0.025em;
   white-space: nowrap;
 
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.13);
+  text-shadow: 0 2px 7px rgba(0, 0, 0, 0.13);
 }
 
 .balance-toggle {
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   padding: 0;
 
   display: grid;
@@ -289,6 +280,11 @@
     transform 160ms ease;
 }
 
+.balance-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
 .balance-toggle:hover {
   color: #ffffff;
   background: rgba(255, 255, 255, 0.08);
@@ -302,19 +298,19 @@
 }
 
 .wallet-change {
-  margin-top: 22px;
+  margin-top: 18px;
 
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .wallet-change__badge {
-  padding: 7px 13px;
+  padding: 6px 11px;
 
   border-radius: 999px;
 
-  font-size: 0.98rem;
+  font-size: 0.86rem;
   font-weight: 650;
   line-height: 1;
 }
@@ -332,13 +328,13 @@
 .wallet-change__label {
   color: rgba(255, 255, 255, 0.72);
 
-  font-size: 1.03rem;
+  font-size: 0.92rem;
   font-weight: 500;
   white-space: nowrap;
 }
 
 .add-entry-button {
-  width: clamp(112px, 18vw, 150px);
+  width: clamp(92px, 15vw, 115px);
   aspect-ratio: 1;
 
   padding: 0;
@@ -353,7 +349,7 @@
   cursor: pointer;
 
   filter:
-    drop-shadow(0 13px 10px rgba(0, 0, 0, 0.24));
+    drop-shadow(0 10px 10px rgba(0, 0, 0, 0.22));
 
   transform-origin: center;
 }
@@ -375,34 +371,35 @@
 
 @media (max-width: 720px) {
   .hero-banner {
-    padding-inline: 10px;
+    width: min(100%, 560px);
+    padding-inline: 8px;
   }
 
   .hero-banner__heading {
-    margin-bottom: 56px;
+    margin-bottom: 45px;
   }
 
   .wallet-shell {
-    height: 370px;
+    height: 310px;
   }
 
   .wallet-shell::before {
-    height: 140px;
-    border-radius: 31px 31px 18px 18px;
+    height: 114px;
+    border-radius: 26px 26px 15px 15px;
   }
 
   .wallet-card {
-    left: 23px;
-    right: 23px;
-    height: 76px;
+    left: 21px;
+    right: 21px;
+    height: 63px;
 
-    padding: 17px 22px;
+    padding: 14px 18px;
 
-    border-radius: 24px 24px 7px 7px;
+    border-radius: 21px 21px 6px 6px;
   }
 
   .wallet-card--food {
-    top: -45px;
+    top: -38px;
   }
 
   .wallet-card--transportation {
@@ -410,59 +407,73 @@
   }
 
   .wallet-card--shopping {
-    top: 45px;
+    top: 37px;
   }
 
   .wallet-pocket {
-    height: 266px;
-    border-radius: 30px;
-    border-width: 4px;
+    height: 225px;
+    border-width: 3px;
+    border-radius: 26px;
   }
 
   .wallet-stitching {
-    inset: 10px;
-    border-radius: 22px;
+    inset: 9px;
+    border-radius: 19px;
   }
 
   .wallet-pocket__content {
-    padding: 52px 43px 38px 42px;
+    padding: 39px 38px 30px 37px;
+  }
+
+  .wallet-balance__amount {
+    font-size: clamp(1.85rem, 6vw, 2.8rem);
+  }
+
+  .add-entry-button {
+    width: 96px;
   }
 }
 
 /* Mobile */
 
 @media (max-width: 540px) {
+  .hero-banner {
+    width: 100%;
+    padding-inline: 5px;
+    padding-bottom: 24px;
+  }
+
   .hero-banner__heading {
-    margin-bottom: 48px;
+    margin-bottom: 40px;
   }
 
   .wallet-shell {
-    height: 326px;
+    height: 270px;
   }
 
   .wallet-shell::before {
     top: 2px;
-    height: 122px;
-    border-radius: 27px 27px 15px 15px;
+    height: 100px;
+    border-radius: 23px 23px 13px 13px;
   }
 
   .wallet-card {
-    left: 17px;
-    right: 17px;
-    height: 65px;
+    left: 15px;
+    right: 15px;
+    height: 56px;
 
-    padding: 14px 17px;
+    padding: 12px 14px;
 
-    border-radius: 20px 20px 6px 6px;
+    border-radius: 18px 18px 5px 5px;
   }
 
   .wallet-card__name,
   .wallet-card__amount {
-    font-size: 0.79rem;
+    font-size: 0.7rem;
   }
 
   .wallet-card--food {
-    top: -39px;
+    top: -34px;
   }
 
   .wallet-card--transportation {
@@ -470,63 +481,63 @@
   }
 
   .wallet-card--shopping {
-    top: 39px;
+    top: 33px;
   }
 
   .wallet-pocket {
-    height: 234px;
-    border-radius: 25px;
-    border-width: 3px;
+    height: 195px;
+    border-width: 2.5px;
+    border-radius: 22px;
   }
 
   .wallet-stitching {
-    inset: 8px;
+    inset: 7px;
 
     border-width: 1.5px;
-    border-radius: 18px;
+    border-radius: 16px;
   }
 
   .wallet-pocket__content {
-    padding: 42px 27px 30px;
+    padding: 34px 22px 25px;
 
     align-items: center;
-    gap: 16px;
+    gap: 13px;
   }
 
   .wallet-balance__row {
-    gap: 8px;
+    gap: 7px;
   }
 
   .wallet-balance__amount {
-    font-size: clamp(1.95rem, 9.5vw, 2.8rem);
+    font-size: clamp(1.65rem, 8vw, 2.35rem);
   }
 
   .balance-toggle {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
   }
 
   .balance-toggle svg {
-    width: 21px;
-    height: 21px;
+    width: 18px;
+    height: 18px;
   }
 
   .wallet-change {
-    margin-top: 16px;
-    gap: 8px;
+    margin-top: 14px;
+    gap: 7px;
   }
 
   .wallet-change__badge {
-    padding: 6px 9px;
-    font-size: 0.76rem;
+    padding: 5px 8px;
+    font-size: 0.7rem;
   }
 
   .wallet-change__label {
-    font-size: 0.82rem;
+    font-size: 0.74rem;
   }
 
   .add-entry-button {
-    width: 88px;
+    width: 76px;
   }
 }
 
@@ -534,15 +545,15 @@
 
 @media (max-width: 390px) {
   .wallet-pocket__content {
-    padding-inline: 22px;
+    padding-inline: 18px;
   }
 
   .wallet-balance__amount {
-    font-size: 1.85rem;
+    font-size: 1.55rem;
   }
 
   .add-entry-button {
-    width: 74px;
+    width: 65px;
   }
 
   .wallet-change__label {
