@@ -70,13 +70,41 @@ button {
   flex-direction: column;
   align-items: flex-start;
 
+  margin: 0;
+  padding: 0;
+
   color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  appearance: none;
+  -webkit-appearance: none;
+
   text-decoration: none;
+  text-align: left;
 
   font-size: 17px;
   font-weight: 700;
   line-height: 1.08;
   letter-spacing: -0.3px;
+
+  cursor: pointer;
+}
+
+.app-brand:hover,
+.app-brand:active {
+  color: inherit;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  transform: none;
+}
+
+.app-brand-name,
+.app-brand-subtitle {
+  display: block;
+  pointer-events: none;
 }
 
 .app-brand-name {
@@ -243,10 +271,6 @@ button {
   justify-content: flex-start;
 }
 
-/*
-  HeroBanner already controls the wallet width.
-  This removes excess internal page spacing from that component.
-*/
 .wallet-column .hero-banner {
   width: 100%;
   max-width: 690px;
@@ -254,18 +278,10 @@ button {
   padding: 0;
 }
 
-/*
-  App owns the welcome heading now,
-  so hide the duplicate heading inside HeroBanner.
-*/
 .wallet-column .hero-banner__heading {
   display: none;
 }
 
-/*
-  The cards rise above the wallet shell,
-  so provide space above the wallet inside the column.
-*/
 .wallet-column .wallet-shell {
   margin-top: 54px;
 }

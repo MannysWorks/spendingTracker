@@ -1,16 +1,24 @@
-import { useAuth } from "./useAuth"
-import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-
+import {
+    Navigate,
+    Outlet,
+    useLocation,
+} from "react-router-dom";
 
 export function ProtectedRoute() {
-    const user = useAuth();
-    const navigate = useNavigate();
-    useEffect(() => {
-        if (user === null) {
-            navigate("/login", { replace: true });
-        }
-    }, [user, navigate]);
+    const location = useLocation();
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+        return (
+            <Navigate
+                to="/login"
+                replace
+                state={{
+                    from: location.pathname,
+                }}
+            />
+        );
+    }
 
     return <Outlet />;
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../css/HeroBanner.css";
+import "../css/Wallet.css";
 import ModalForm from "./Modals/ModalForm";
 import {
     AnimatePresence,
@@ -29,7 +29,9 @@ const cardVariants: Variants = {
         y: 0,
         opacity: 1,
         transition: {
-            delay: 0.25 + index * 0.25,
+            // Reverse the stagger so the lowest card exits first:
+            // Shopping -> Transportation -> Food & Drinks.
+            delay: 0.25 + (2 - index) * 0.25,
             duration: 0.65,
             ease: [0.22, 1, 0.36, 1],
         },
@@ -192,8 +194,8 @@ function HeroBanner({
                                 <div className="wallet-change">
                                     <span
                                         className={`wallet-change__badge ${isPositive
-                                                ? "wallet-change__badge--positive"
-                                                : "wallet-change__badge--negative"
+                                            ? "wallet-change__badge--positive"
+                                            : "wallet-change__badge--negative"
                                             }`}
                                     >
                                         {isPositive ? "+" : ""}
