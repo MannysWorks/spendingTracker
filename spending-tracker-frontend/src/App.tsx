@@ -1,37 +1,117 @@
-import { useState } from "react";
-import { AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import {
+  Outlet,
+  useNavigate,
+} from "react-router-dom";
+import { motion } from "framer-motion";
 
 import Navbar from "./components/Navbar";
-import Modal from "./components/Modals/Modal";
 import Wallet from "./components/Wallet";
 
 import "./css/App.css";
 
-function App() {
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const [refreshKey, setRefreshKey] = useState<number>(0);
+export function HomePage() {
+  return (
+    <motion.section
+      className="app-content"
+      initial={{
+        opacity: 0,
+        y: 10,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+      }}
+      exit={{
+        opacity: 0,
+        y: -8,
+      }}
+      transition={{
+        duration: 0.22,
+        ease: "easeOut",
+      }}
+    >
+      <div className="dashboard-heading">
+        <h1>Welcome Back!</h1>
+      </div>
 
+      <div className="dashboard-grid">
+        <div className="wallet-column">
+          <Wallet userName="Manny" />
+        </div>
+
+        <div className="analytics-column">
+          <div className="analytics-placeholder">
+            Monthly analytics will go here
+          </div>
+        </div>
+      </div>
+    </motion.section>
+  );
+}
+
+export function ActivityPage() {
+  return (
+    <motion.section
+      className="app-content"
+      initial={{
+        opacity: 0,
+        y: 10,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+      }}
+      exit={{
+        opacity: 0,
+        y: -8,
+      }}
+      transition={{
+        duration: 0.22,
+        ease: "easeOut",
+      }}
+    >
+      <div className="dashboard-heading">
+        <h1>Activity</h1>
+      </div>
+
+      <div className="analytics-placeholder">
+        Activity insights will go here.
+      </div>
+    </motion.section>
+  );
+}
+
+function App() {
   const navigate = useNavigate();
 
   const handleLogout = (): void => {
     localStorage.removeItem("token");
-    navigate("/login");
+    navigate("/login", {
+      replace: true,
+    });
   };
 
   return (
     <main className="app-shell">
       <header className="app-header">
         <div className="app-header-inner">
-          <a className="app-brand" href="/" aria-label="Mannys Spending Tracker">
-            <span className="app-brand-name">Mannys</span>
+          <button
+            type="button"
+            className="app-brand"
+            onClick={() => navigate("/home")}
+            aria-label="Mannys Spending Tracker home"
+          >
+            <span className="app-brand-name">
+              Mannys
+            </span>
+
             <span className="app-brand-subtitle">
               Spending Tracker
             </span>
-          </a>
+          </button>
 
           <div className="app-navbar-container">
-            <Navbar onOpenTable={() => setShowModal(true)} />
+            <Navbar />
           </div>
 
           <div className="app-header-actions">
@@ -77,35 +157,7 @@ function App() {
         </div>
       </header>
 
-      <section className="app-content">
-        <div className="dashboard-heading">
-          <h1>Welcome Back!</h1>
-        </div>
-
-        <div className="dashboard-grid">
-          <div className="wallet-column">
-            <Wallet userName="Manny" />
-          </div>
-
-          <div className="analytics-column">
-            <div className="analytics-placeholder">
-              Monthly analytics will go here
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <AnimatePresence>
-        {showModal && (
-          <Modal
-            key={refreshKey}
-            onClose={() => setShowModal(false)}
-            onRefresh={() =>
-              setRefreshKey((previous) => previous + 1)
-            }
-          />
-        )}
-      </AnimatePresence>
+      <Outlet />
     </main>
   );
 }

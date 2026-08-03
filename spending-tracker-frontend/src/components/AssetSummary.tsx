@@ -2,11 +2,11 @@ import { type ReactNode } from "react"
 import Card from "./Card"
 
 interface props {
-    totalAssets: number
-    totalAssetsChange: number
-    endOfDayBal: number
-    RobinHoodBal: number
-    percentChange: number
+    totalAssets: number | undefined
+    totalAssetsChange: number | undefined
+    endOfDayBal: number | undefined
+    RobinHoodBal: number | undefined
+    percentChange: number | undefined
     isLoading: boolean
 }
 
@@ -18,11 +18,11 @@ function AssetSummary({ totalAssets, totalAssetsChange, endOfDayBal, RobinHoodBa
         </div>
 
     const renderCard = (
-        body: number,
+        body: number | undefined,
         title: string,
         variant: "highlight" | "default" | "dark" = "default",
         format: "currency" | "percent" = "currency",
-        change?: number,
+        change?: number | undefined,
         border?: boolean
     ) => (
         isLoading ? placeHolder :

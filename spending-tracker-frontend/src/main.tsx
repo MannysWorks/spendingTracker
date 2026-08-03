@@ -1,48 +1,105 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
-import 'bootstrap/dist/js/bootstrap.js'
-import 'bootstrap/dist/css/bootstrap.css'
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
+
+import "bootstrap/dist/js/bootstrap.js";
+import "bootstrap/dist/css/bootstrap.css";
+
+import App, {
+  ActivityPage,
+  HomePage,
+} from "./App.tsx";
+import EntriesPage from "./pages/EntriesPage.tsx";
 import { Login } from "./pages/Login.tsx";
+import { Register } from "./pages/Register.tsx";
+import { AboutPage } from "./pages/AboutPage.tsx";
+import { GenericErrorPage } from "./pages/GenericErrorPage.tsx";
+
 import { AuthProvider } from "./Services/AuthProvider.tsx";
 import { ProtectedRoute } from "./Services/ProtectedRoute.tsx";
-import { Register } from "./pages/Register.tsx";
-import { GenericErrorPage } from "./pages/GenericErrorPage.tsx";
-import { AboutPage } from "./pages/AboutPage.tsx";
 
-// Handle navigation to login and register pages
-const handleRegisterClick = () => {
-  // Navigate to the register page
-  window.location.href = "/register";
+const handleRegisterClick = (): void => {
+  window.location.assign("/register");
 };
-const handleLoginClick = () => {
-  // Navigate to the login page
-  window.location.href = "/login";
-}
 
-// Check if the user is authenticated by verifying the presence of a token in localStorage.
-const isAuthenticated = !!localStorage.getItem("token");
+const handleLoginClick = (): void => {
+  window.location.assign("/login");
+};
+
+const isAuthenticated = Boolean(
+  localStorage.getItem("token"),
+);
 
 const router = createBrowserRouter([
   {
-    path: "/home",
-    element: <ProtectedRoute />,
-    children: [
-      { path: "/home", element: <App /> }
-    ],
-    errorElement: <GenericErrorPage />
+    path: "/",
+    element: <AboutPage />,
+    errorElement: <GenericErrorPage />,
   },
-  { path: "/", element: <AboutPage /> },
-  { path: "/register", element: <Register onLoginClick={handleLoginClick} /> },
-  { path: "/login", element: <Login onRegisterClick={handleRegisterClick} /> },
-  { path: "*", element: <GenericErrorPage /> }
+  {
+    path: "/register",
+    element: (
+      <Register onLoginClick={handleLoginClick} />
+    ),
+  },
+  {
+    path: "/login",
+    element: (
+      <Login
+        onRegisterClick={handleRegisterClick}
+      />
+    ),
+  },
+  {
+    element: <ProtectedRoute />,
+    errorElement: <GenericErrorPage />,
+    children: [
+      {
+        element: <App />,
+        children: [
+          {
+            path: "/home",
+            element: <HomePage />,
+          },
+          {
+            path: "/table",
+            element: <EntriesPage />,
+          },
+          {
+            path: "/entries",
+            element: (
+              <Navigate
+                to="/table"
+                replace
+              />
+            ),
+          },
+          {
+            path: "/activity",
+            element: <ActivityPage />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "*",
+    element: <GenericErrorPage />,
+  },
 ]);
 
-createRoot(document.getElementById("root")!).render(
+createRoot(
+  document.getElementById("root")!,
+).render(
   <StrictMode>
-    <AuthProvider isSighnedIn={isAuthenticated}>
+    <AuthProvider
+      isSighnedIn={isAuthenticated}
+    >
       <RouterProvider router={router} />
     </AuthProvider>
-  </StrictMode>
+  </StrictMode>,
 );
