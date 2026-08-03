@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Modal from "./components/Modals/Modal";
-import Herobanner from "./components/HeroBanner";
+import Wallet from "./components/Wallet";
 
 import "./css/App.css";
 
@@ -84,7 +84,7 @@ function App() {
 
         <div className="dashboard-grid">
           <div className="wallet-column">
-            <Herobanner userName="Manny" />
+            <Wallet userName="Manny" />
           </div>
 
           <div className="analytics-column">

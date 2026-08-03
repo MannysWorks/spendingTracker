@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../css/HeroBanner.css";
+import "../css/Wallet.css";
 import ModalForm from "./Modals/ModalForm";
 import {
     AnimatePresence,
