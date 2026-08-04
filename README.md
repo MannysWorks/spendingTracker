@@ -1,7 +1,7 @@
 # Spending Tracker
 Track my spending and net worth. I used to do this on a Google spreadsheet lol, so I built an app for it.
 
-🔗 **Live app:** [spendingtracker.mannys.works](https://spendingtracker.mannys.works)
+Link: [spendingtracker.mannys.works](https://spendingtracker.mannys.works)
 
 ## Tech Stack
 
@@ -13,11 +13,11 @@ Track my spending and net worth. I used to do this on a Google spreadsheet lol, 
 - Material-UI (MUI) components
 - Bootstrap & React Bootstrap
 - Framer Motion for animations
-- FontAwesome icons
+- Lucide React & FontAwesome icons
 - DayJS for date handling
 
 **Backend**
-- Spring Boot 4.0.5
+- Spring Boot 3.0+
 - Spring Security with JWT authentication
 - Spring Data JPA
 - MySQL database
@@ -71,7 +71,14 @@ This app is deployed and live at **[spendingtracker.mannys.works](https://spendi
 ├── spending-tracker-frontend/      # React + TypeScript frontend
 │   ├── src/
 │   │   ├── pages/                 # Route pages
+│   │   │   ├── HomePage.tsx       # Dashboard with Wallet component
+│   │   │   ├── EntriesPage.tsx    # Spending entries tracking
+│   │   │   └── ...                # Other pages
 │   │   ├── components/            # Reusable React components
+│   │   │   ├── Navbar.tsx         # Navigation with improved accessibility
+│   │   │   ├── Wallet.tsx         # Main wallet/hero section (formerly HeroBanner)
+│   │   │   ├── Sidebar.tsx        # Mobile-responsive sidebar
+│   │   │   └── ...                # Other components
 │   │   ├── Services/              # API client functions
 │   │   ├── interfaces/            # TypeScript interfaces
 │   │   ├── types/                 # TypeScript types
@@ -208,9 +215,20 @@ Then open your browser to `http://localhost:5173`
 - Password reset functionality with email verification
 - 6-digit reset code with 15-minute expiration
 - Email notifications for account recovery
-- Responsive React UI with modern component libraries
+- Modern, responsive React UI with Framer Motion animations
+- Improved navigation with refined Navbar component
+- Enhanced wallet/dashboard view with better UX
+- Mobile-responsive sidebar navigation
 - Real-time expense tracking and net worth calculations
 - MySQL database persistence with JPA/Hibernate ORM
+
+## Recent Updates (August 2026)
+
+- UI Redesign: Complete refactor of the navigation and hero banner components for improved user experience
+- Component Refactoring: Renamed HeroBanner to Wallet for clarity; improved Navbar with better accessibility
+- Enhanced Animations: Updated card animations and layout adjustments with Framer Motion
+- Mobile Responsiveness: Improved mobile UI with responsive Sidebar component
+- New EntriesPage: Dedicated page for tracking spending entries with modal form functionality
 
 ## API Endpoints
 
