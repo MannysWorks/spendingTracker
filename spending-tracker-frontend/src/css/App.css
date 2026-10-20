@@ -254,12 +254,8 @@ button {
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns:
-    minmax(520px, 0.95fr)
-    minmax(520px, 1.05fr);
-
+  grid-template-columns: minmax(0, 690px);
   align-items: start;
-  gap: clamp(28px, 4vw, 56px);
 }
 
 /* Wallet positioning */
@@ -286,11 +282,7 @@ button {
   margin-top: 54px;
 }
 
-/* Analytics panel placeholder */
-
-.analytics-column {
-  min-width: 0;
-}
+/* Activity page placeholder */
 
 .analytics-placeholder {
   min-height: 420px;
@@ -319,14 +311,6 @@ button {
 
   .app-content {
     width: min(100% - 44px, 1120px);
-  }
-
-  .dashboard-grid {
-    grid-template-columns:
-      minmax(460px, 1fr)
-      minmax(430px, 1fr);
-
-    gap: 28px;
   }
 
   .wallet-column .hero-banner {
@@ -368,13 +352,7 @@ button {
     padding-top: 28px;
   }
 
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-    gap: 36px;
-  }
-
-  .wallet-column,
-  .analytics-column {
+  .wallet-column {
     width: 100%;
   }
 

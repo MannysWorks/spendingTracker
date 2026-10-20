@@ -31,24 +31,26 @@ export async function handleResponse(response: Response, setShowToast: (show: bo
 
 
 
-export const getEntries = async (): Promise<Entry[]> => {
+export const getEntries = async (signal?: AbortSignal): Promise<Entry[]> => {
     const token = localStorage.getItem("token");
     const response = await fetch(`${BASE_URL}/all`, {
+        signal,
         headers: {
             'Authorization': `Bearer ${token}`
         }
     });
 
     if (!response.ok) {
-        console.log("Status:", response.status);
-        return [];
+        throw new Error(`Unable to load entries (${response.status}).`);
     }
 
     const text = await response.text();
     if (!text) {
         return [];
     }
-    return JSON.parse(text);
+    const entries: Entry[] = JSON.parse(text);
+    // Summaries and the table rely on oldest-to-newest order.
+    return entries.sort((first, second) => first.date.localeCompare(second.date));
 }
 
 export const postEntry = async (entry: Entry): Promise<Response> => {

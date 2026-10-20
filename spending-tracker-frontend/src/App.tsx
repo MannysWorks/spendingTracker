@@ -36,13 +36,7 @@ export function HomePage() {
 
       <div className="dashboard-grid">
         <div className="wallet-column">
-          <Wallet userName="Manny" />
-        </div>
-
-        <div className="analytics-column">
-          <div className="analytics-placeholder">
-            Monthly analytics will go here
-          </div>
+          <Wallet />
         </div>
       </div>
     </motion.section>

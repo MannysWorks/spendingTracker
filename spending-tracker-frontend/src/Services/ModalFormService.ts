@@ -24,12 +24,14 @@ export const formatDateToString = (
 
 interface CreateEntrySubmitHandlerOptions {
     entry?: Entry;
+    onSaved?: () => void;
     setShowToast: Dispatch<SetStateAction<boolean>>;
     setToastMessage: Dispatch<SetStateAction<string>>;
 }
 
 export const createEntrySubmitHandler = ({
     entry,
+    onSaved,
     setShowToast,
     setToastMessage,
 }: CreateEntrySubmitHandlerOptions): SubmitHandler<Entry> => {
@@ -44,14 +46,23 @@ export const createEntrySubmitHandler = ({
                     : data.date,
         };
 
-        const response = entry
-            ? await putEntry(castData)
-            : await postEntry(castData);
+        try {
+            const response = entry
+                ? await putEntry(castData)
+                : await postEntry(castData);
 
-        handleResponse(
-            response,
-            setShowToast,
-            setToastMessage,
-        );
+            await handleResponse(
+                response,
+                setShowToast,
+                setToastMessage,
+            );
+
+            if (response.ok) {
+                onSaved?.();
+            }
+        } catch {
+            setToastMessage("Unable to save your entry. Please try again.");
+            setShowToast(true);
+        }
     };
 };
