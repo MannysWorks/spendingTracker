@@ -27,11 +27,13 @@ import {
 
 interface ModalFormProps {
     onClose: () => void;
+    onSaved?: () => void;
     entry?: Entry;
 }
 
 function ModalForm({
     onClose,
+    onSaved,
     entry,
 }: ModalFormProps) {
     const {
@@ -58,6 +60,7 @@ function ModalForm({
 
     const onSubmit = createEntrySubmitHandler({
         entry,
+        onSaved,
         setShowToast,
         setToastMessage,
     });

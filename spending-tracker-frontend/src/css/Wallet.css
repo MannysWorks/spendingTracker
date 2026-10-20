@@ -239,6 +239,13 @@
   padding-top: 5px;
 }
 
+.wallet-balance__label {
+  margin: 0 0 9px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
 .wallet-balance__row {
   display: flex;
   align-items: center;
@@ -323,6 +330,33 @@
 .wallet-change__badge--negative {
   color: var(--negative);
   background: rgba(150, 24, 45, 0.38);
+}
+
+.wallet-change__badge--neutral {
+  color: #e2e8f0;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.wallet-summary__status {
+  margin-top: 12px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.73rem;
+  line-height: 1.5;
+}
+
+.wallet-summary__status button {
+  padding: 0;
+  color: #ffffff;
+  background: transparent;
+  border: 0;
+  border-radius: 2px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.wallet-summary__status button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
 }
 
 .wallet-change__label {

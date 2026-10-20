@@ -23,8 +23,8 @@ function Navbar() {
             <button
                 type="button"
                 className={`navbar-link ${isActive(["/", "/home"])
-                        ? "active"
-                        : ""
+                    ? "active"
+                    : ""
                     }`}
                 onClick={() => navigate("/home")}
                 aria-current={
@@ -39,8 +39,8 @@ function Navbar() {
             <button
                 type="button"
                 className={`navbar-link ${isActive(["/table", "/entries"])
-                        ? "active"
-                        : ""
+                    ? "active"
+                    : ""
                     }`}
                 onClick={() => navigate("/table")}
                 aria-current={
@@ -52,23 +52,7 @@ function Navbar() {
                 Table
             </button>
 
-            <button
-                type="button"
-                className={`navbar-link ${isActive(["/activity"])
-                        ? "active"
-                        : ""
-                    }`}
-                onClick={() =>
-                    navigate("/activity")
-                }
-                aria-current={
-                    isActive(["/activity"])
-                        ? "page"
-                        : undefined
-                }
-            >
-                Activity
-            </button>
+
         </nav>
     );
 }

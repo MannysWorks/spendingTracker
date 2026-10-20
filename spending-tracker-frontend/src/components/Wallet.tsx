@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "../css/Wallet.css";
 import ModalForm from "./Modals/ModalForm";
 import {
@@ -7,12 +7,8 @@ import {
     type Variants,
 } from "framer-motion";
 import buttonAddIcon from "../assets/add-entry-wood-button.webp";
-
-type HeroBannerProps = {
-    userName?: string;
-    totalBalance?: number;
-    percentageChange?: number;
-};
+import { getEntries } from "../Services/EntryService";
+import type { Entry } from "../interfaces/Entry";
 
 type CategoryCard = {
     name: string;
@@ -38,28 +34,68 @@ const cardVariants: Variants = {
     }),
 };
 
-function HeroBanner({
-    totalBalance = 0,
-    percentageChange = 0,
-}: HeroBannerProps) {
+function Wallet() {
     const [showModalForm, setShowModalForm] = useState(false);
     const [showBalance, setShowBalance] = useState(true);
+    const [entries, setEntries] = useState<Entry[]>([]);
+    const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+    const activeRequest = useRef<AbortController | null>(null);
 
-    // TODO: Replace these mocked category totals with API data.
+    const loadWallet = useCallback((): Promise<void> => {
+        activeRequest.current?.abort();
+        const controller = new AbortController();
+        activeRequest.current = controller;
+
+        return getEntries(controller.signal).then(
+            (loadedEntries) => {
+                if (!controller.signal.aborted) {
+                    setEntries(loadedEntries);
+                    setStatus("ready");
+                }
+            },
+            () => {
+                if (!controller.signal.aborted) {
+                    setStatus("error");
+                }
+            },
+        );
+    }, []);
+
+    useEffect(() => {
+        void loadWallet();
+        return () => activeRequest.current?.abort();
+    }, [loadWallet]);
+
+    const refreshWallet = (): void => {
+        setStatus("loading");
+        void loadWallet();
+    };
+
+    const latestEntry = entries.at(-1);
+    const previousEntry = entries.at(-2);
+    const totalBalance = latestEntry?.totalAssets ?? 0;
+    const percentageChange = Number((latestEntry?.percentChange ?? 0).toFixed(2));
+    const hasComparison = status === "ready"
+        && previousEntry !== undefined
+        && previousEntry.totalAssets !== 0
+        && Number.isFinite(latestEntry?.percentChange);
+    const isReady = status === "ready";
+
+    // These cards show spending for the latest recorded date.
     const categories: CategoryCard[] = [
         {
             name: "Food & Drinks",
-            amount: 843.24,
+            amount: (latestEntry?.grocery ?? 0) + (latestEntry?.fastFood ?? 0),
             className: "wallet-card--food",
         },
         {
             name: "Transportation",
-            amount: 512.38,
+            amount: latestEntry?.gas ?? 0,
             className: "wallet-card--transportation",
         },
         {
             name: "Shopping",
-            amount: 1283.76,
+            amount: latestEntry?.shopping ?? 0,
             className: "wallet-card--shopping",
         },
     ];
@@ -70,15 +106,26 @@ function HeroBanner({
             currency: "USD",
         }).format(amount);
 
-    const isPositive = percentageChange >= 0;
+    const changeVariant = percentageChange > 0
+        ? "positive"
+        : percentageChange < 0 ? "negative" : "neutral";
+
+    const latestEntryDate = latestEntry
+        ? new Intl.DateTimeFormat("en-US", { dateStyle: "medium" })
+            .format(new Date(`${latestEntry.date}T12:00:00`))
+        : "";
 
     return (
         <>
-            <section className="hero-banner" aria-label="Spending wallet summary">
+            <section
+                className="hero-banner"
+                aria-label="Spending wallet summary"
+                aria-busy={status === "loading"}
+            >
                 <div className="wallet-shell">
                     <div
                         className="wallet-cards"
-                        aria-label="Spending categories"
+                        aria-label="Spending categories for the latest entry"
                     >
                         {categories.map((category, index) => (
                             <motion.div
@@ -94,7 +141,7 @@ function HeroBanner({
                                 </span>
 
                                 <span className="wallet-card__amount">
-                                    {formatCurrency(category.amount)}
+                                    {!showBalance ? "•••••" : isReady ? formatCurrency(category.amount) : "—"}
                                 </span>
                             </motion.div>
                         ))}
@@ -108,16 +155,20 @@ function HeroBanner({
 
                         <div className="wallet-pocket__content">
                             <div className="wallet-balance">
+                                <p className="wallet-balance__label">Total assets</p>
                                 <div className="wallet-balance__row">
                                     <span className="wallet-balance__amount">
-                                        {showBalance
-                                            ? formatCurrency(totalBalance)
-                                            : "•••••••"}
+                                        {!showBalance
+                                            ? "•••••••"
+                                            : status === "loading"
+                                                ? "Loading…"
+                                                : isReady ? formatCurrency(totalBalance) : "—"}
                                     </span>
 
                                     <button
                                         type="button"
                                         className="balance-toggle"
+                                        aria-pressed={!showBalance}
                                         onClick={() =>
                                             setShowBalance(
                                                 (current) => !current,
@@ -125,8 +176,8 @@ function HeroBanner({
                                         }
                                         aria-label={
                                             showBalance
-                                                ? "Hide total balance"
-                                                : "Show total balance"
+                                                ? "Hide wallet amounts"
+                                                : "Show wallet amounts"
                                         }
                                     >
                                         {showBalance ? (
@@ -191,20 +242,41 @@ function HeroBanner({
                                     </button>
                                 </div>
 
-                                <div className="wallet-change">
-                                    <span
-                                        className={`wallet-change__badge ${isPositive
-                                            ? "wallet-change__badge--positive"
-                                            : "wallet-change__badge--negative"
-                                            }`}
-                                    >
-                                        {isPositive ? "+" : ""}
-                                        {percentageChange.toFixed(2)}%
-                                    </span>
+                                {hasComparison && (
+                                    <div className="wallet-change">
+                                        <span
+                                            className={`wallet-change__badge wallet-change__badge--${changeVariant}`}
+                                            aria-label={showBalance
+                                                ? `${percentageChange.toFixed(2)}% change versus previous entry`
+                                                : "Percentage change hidden"}
+                                        >
+                                            {showBalance
+                                                ? `${percentageChange > 0 ? "+" : ""}${percentageChange.toFixed(2)}%`
+                                                : "••••"}
+                                        </span>
 
-                                    <span className="wallet-change__label">
-                                        last day
-                                    </span>
+                                        <span className="wallet-change__label">
+                                            vs. previous entry
+                                        </span>
+                                    </div>
+                                )}
+
+                                <div className="wallet-summary__status" role="status">
+                                    {status === "loading" ? "Loading your latest entry…"
+                                        : status === "error" ? (
+                                            <>
+                                                Unable to load your wallet.{" "}
+                                                <button type="button" onClick={refreshWallet}>
+                                                    Retry
+                                                </button>
+                                            </>
+                                        ) : latestEntry ? (
+                                            <>
+                                                Latest entry · <time dateTime={latestEntry.date}>{latestEntryDate}</time>
+                                                {!previousEntry && " · First entry"}
+                                                {previousEntry?.totalAssets === 0 && " · No percentage baseline"}
+                                            </>
+                                        ) : "Add your first entry to get started."}
                                 </div>
                             </div>
 
@@ -255,6 +327,7 @@ function HeroBanner({
                     <ModalForm
                         key="modal-form"
                         onClose={() => setShowModalForm(false)}
+                        onSaved={refreshWallet}
                     />
                 )}
             </AnimatePresence>
@@ -262,4 +335,4 @@ function HeroBanner({
     );
 }
 
-export default HeroBanner;
+export default Wallet;
